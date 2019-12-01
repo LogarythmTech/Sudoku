@@ -86,8 +86,11 @@ class Sudoku {
 	
 	//MARK: - Solve
 	func solve() {
-		filterAllSingles()
-		filterAllSinglets()
+		for _ in 0..<10 {
+			filterAllObviousPairs()
+			filterAllSinglets()
+			filterAllSingles()
+		}
 	}
 	
 	//MARK: Singles
@@ -183,6 +186,75 @@ class Sudoku {
 	}
 	
 	//MARK: Obvious Pairs
+	func filterAllObviousPairs() {
+		for i in 0..<board.count {
+			filterObviousPairs(row: i)
+			filterObviousPairs(col: i)
+			filterObviousPairs(group: i)
+		}
+	}
+	func filterObviousPairs(row: Int) {
+		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for col in 0..<board[row].count {
+			if(board[row][col].pos.count == 2) {
+				if let _ = posCount[board[row][col].pos] {
+					posCount[board[row][col].pos]?.append(col)
+				} else {
+					posCount[board[row][col].pos] = [col]
+				}
+			}
+		}
+				
+		for x in posCount {
+			if(x.value.count == 2) {
+				removeFrom(row: row, remove: x.key, exclude: x.value)
+			}
+		}
+	}
+	func filterObviousPairs(col: Int) {
+		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for row in 0..<board.count {
+			if(board[row][col].pos.count == 2) {
+				if let _ = posCount[board[row][col].pos] {
+					posCount[board[row][col].pos]?.append(row)
+				} else {
+					posCount[board[row][col].pos] = [row]
+				}
+			}
+		}
+				
+		for x in posCount {
+			if(x.value.count == 2) {
+				removeFrom(col: col, remove: x.key, exclude: x.value)
+			}
+		}
+	}
+	func filterObviousPairs(group: Int) {
+		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for i in 0..<(board.count/3) {
+			for j in 0..<(board[i].count/3) {
+				let row = i + (group / 3) * 3
+				let col = j + (group % 3) * 3
+				
+				if(board[row][col].pos.count == 2) {
+					if let _ = posCount[board[row][col].pos] {
+						posCount[board[row][col].pos]?.append(i*3 + j)
+					} else {
+						posCount[board[row][col].pos] = [i*3 + j]
+					}
+				}
+			}
+		}
+				
+		for x in posCount {
+			if(x.value.count == 2) {
+				removeFrom(group: group, remove: x.key, exclude: x.value)
+			}
+		}
+	}
 	
 	//MARK: Obvious Triplets
 	
@@ -339,5 +411,33 @@ class Sudoku {
 		return groups
 	}
 	
+	//MARK: - Remove
+	func removeFrom(row: Int, remove: [Int], exclude: [Int]) {
+		for col in 0..<board[row].count {
+			if(!exclude.contains(col)) {
+				board[row][col].pos.removeAll(where: {remove.contains($0)})
+			}
+		}
+	}
 	
+	func removeFrom(col: Int, remove: [Int], exclude: [Int]) {
+		for row in 0..<board.count {
+			if(!exclude.contains(row)) {
+				board[row][col].pos.removeAll(where: {remove.contains($0)})
+			}
+		}
+	}
+	
+	func removeFrom(group: Int, remove: [Int], exclude: [Int]) {
+		for i in 0..<(board.count/3) {
+			for j in 0..<(board[i].count/3) {
+				let row = i + (group / 3) * 3
+				let col = j + (group % 3) * 3
+				
+				if(!exclude.contains(i*3 + j)) {
+					board[row][col].pos.removeAll(where: {remove.contains($0)})
+				}
+			}
+		}
+	}
 }
