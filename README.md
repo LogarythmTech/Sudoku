@@ -1,8 +1,8 @@
 # Sudoku
-Solve an Sudoku Game
+[Solve](#solve-puzzle) and/or [Generate](##generate-puzzle) a Sudoku Game.
 
 ## Generate Puzzle
-
+Todo
 
 ## Solve Puzzle
 Each cell is sets an array of possible intergers \[1-9\] that could go there. It then filters out the posiblites using different methods. When the array of possible choice gets to the lenght of one, we can determine that that is the number for that cell.
