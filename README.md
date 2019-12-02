@@ -1,18 +1,20 @@
 # Sudoku
 Solve an Sudoku Game
 
+## Generate Puzzle
 
-## How the solving algorithm works 
+
+## Solve Puzzle
 Each cell is sets an array of possible intergers \[1-9\] that could go there. It then filters out the posiblites using different methods. When the array of possible choice gets to the lenght of one, we can determine that that is the number for that cell.
 
-* [Singles]()
-* [Singlets]()
-* [Pointing Pairs]()
-* [Box Line Reduction]()
-* [Obvious Pairs]()
-* [Obvious Triplets]()
-* [X-Wing]()
-* [Bowman's Bingo]()
+* [Singles](#singles)
+* [Singlets](#singlets)
+* [Pointing Pairs](#pointing-pairs)
+* [Box Line Reduction](#box-line-reduction)
+* [Obvious Pairs](#obvious-pairs)
+* [Obvious Triplets](#obvious-triplets)
+* [X-Wing](#x-wing)
+* [Bowman's Bingo](#bowmans-bingo)
 
 ### Singles
 
