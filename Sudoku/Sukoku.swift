@@ -245,7 +245,7 @@ class Sudoku : ObservableObject {
 		}
 		
 		if(!isValid) {
-			lastMove = "Bowman's Bingo";
+			lastMove = "Bowman's Bingo End";
 			bowmansBingoCont()
 			return
 		}
@@ -254,7 +254,7 @@ class Sudoku : ObservableObject {
 		filterAllSingles()
 		if(didChange) {lastMove = "Single"; return}
 		filterAllSinglets()
-		if(didChange) {lastMove = "Singlet";lastMove = "Single";return}
+		if(didChange) {lastMove = "Singlets";return}
 		filterAllBoxLineReduction()
 		if(didChange) {lastMove = "Box Line Reduction"; return}
 		filterAllPointingPairs()
