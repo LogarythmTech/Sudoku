@@ -12,18 +12,57 @@ struct SudokuView: View {
 	@ObservedObject var sud: Sudoku
 	
     var body: some View {
-		VStack(spacing: 1) {
-			ForEach(0..<self.sud.board.count) { i in
-				HStack(spacing: 1) {
-					ForEach(0..<self.sud.board[i].count) { j in
-						SudokuCellView(myCell: self.sud.board[i][j])
-					}
-				}
+		VStack(spacing: 2) {
+			VStack(spacing: 0.5) {
+				SudokuRowView(sud: self.sud, row: 0)
+				SudokuRowView(sud: self.sud, row: 1)
+				SudokuRowView(sud: self.sud, row: 2)
+			}
+			
+			VStack(spacing: 0.5) {
+				SudokuRowView(sud: self.sud, row: 3)
+				SudokuRowView(sud: self.sud, row: 4)
+				SudokuRowView(sud: self.sud, row: 5)
+			}
+			
+			VStack(spacing: 0.5) {
+				SudokuRowView(sud: self.sud, row: 6)
+				SudokuRowView(sud: self.sud, row: 7)
+				SudokuRowView(sud: self.sud, row: 8)
 			}
 		}.background(Color.black).border(Color.black, width: 2)
 		.aspectRatio(1, contentMode: .fit)
     }
 }
+
+struct SudokuRowView: View {
+	@ObservedObject var sud: Sudoku
+	let row: Int
+	
+    var body: some View {
+		HStack(spacing: 2) {
+			HStack(spacing: 0.5) {
+				SudokuCellView(myCell: self.sud.board[row][0])
+				SudokuCellView(myCell: self.sud.board[row][1])
+				SudokuCellView(myCell: self.sud.board[row][2])
+			}
+			
+			HStack(spacing: 0.5) {
+				SudokuCellView(myCell: self.sud.board[row][3])
+				SudokuCellView(myCell: self.sud.board[row][4])
+				SudokuCellView(myCell: self.sud.board[row][5])
+			}
+			
+			HStack(spacing: 0.5) {
+				SudokuCellView(myCell: self.sud.board[row][6])
+				SudokuCellView(myCell: self.sud.board[row][7])
+				SudokuCellView(myCell: self.sud.board[row][8])
+			}
+		}
+	}
+}
+
+
 
 struct SudokuNumberView: View {
 	let number: Int
@@ -114,7 +153,6 @@ struct SudokuCellView: View {
 		}
     }
 }
-
 
 struct SudokuView_Previews: PreviewProvider {
     static var previews: some View {

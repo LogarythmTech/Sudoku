@@ -140,15 +140,15 @@ class Sudoku : ObservableObject {
 	}
 	
 	func gererate(given: Int) {
-		setCells(board: [[0, 1, 0, 9, 2, 0, 0, 7, 0],
-						 [3, 6, 0, 0, 5, 0, 0, 0, 0],
-						 [0, 0, 0, 0, 4, 0, 0, 0, 0],
-						 [0, 0, 0, 0, 0, 0, 0, 0, 0],
-						 [6, 0, 0, 0, 0, 0, 5, 4, 0],
-						 [0, 8, 2, 7, 0, 0, 0, 9, 0],
-						 [0, 0, 0, 0, 0, 0, 0, 0, 9],
-						 [0, 0, 8, 0, 0, 4, 0, 0, 0],
-						 [0, 0, 0, 8, 0, 0, 3, 0, 6]])
+		setCells(board: [[4, 0, 0, 9, 0, 1, 0, 0, 0],
+						 [0, 0, 0, 0, 0, 5, 0, 7, 0],
+						 [0, 0, 0, 0, 0, 0, 3, 0, 0],
+						 [0, 0, 8, 0, 0, 0, 4, 0, 0],
+						 [0, 0, 2, 0, 0, 7, 9, 0, 0],
+						 [0, 0, 7, 5, 2, 0, 0, 8, 0],
+						 [6, 0, 0, 0, 4, 0, 1, 0, 2],
+						 [0, 0, 0, 6, 1, 0, 0, 0, 0],
+						 [2, 0, 9, 0, 0, 0, 0, 0, 0]])
 		save()
 	}
 	
@@ -157,7 +157,6 @@ class Sudoku : ObservableObject {
 	func save() {
 		saveState.append(self.board)
 	}
-	
 	func restoreBoard() {
 		if let lastSave = saveState.last  {
 			board = lastSave
@@ -180,7 +179,6 @@ class Sudoku : ObservableObject {
 			currentColor = .blue
 		}
 	}
-	
 	func resetBoard() {
 		if let firstSave = saveState.first  {
 			board = firstSave
@@ -203,7 +201,6 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: - Solve
-	//filters are true when they changed shomthing
 	func solve() {
 		while !isSolved {
 			stepSolve()
@@ -219,7 +216,6 @@ class Sudoku : ObservableObject {
 			}
 		}
 	}
-	
 	func stepSolve() {
 		if(isSolved) {
 			for row in 0..<board.count {
@@ -862,7 +858,6 @@ class Sudoku : ObservableObject {
 	
 	//MARK: Bowman's Bingo (Brute Force w/ Backtracing)
 	var bowmansCells: [(Int, Int, Int)] = [(Int, Int, Int)]()
-	
 	func bowmansBingo() {
 		if let cell = randomCell() {
 			let randomIndex: Int = Int.random(in: 0..<self.board[cell.0][cell.1].pos.count)
@@ -874,7 +869,6 @@ class Sudoku : ObservableObject {
 			bowmansCells.append((cell.0, cell.1, changeTo))
 		}
 	}
-	
 	func bowmansBingoCont() {
 		restoreBoard()
 		
