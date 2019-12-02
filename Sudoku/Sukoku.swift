@@ -213,6 +213,8 @@ class Sudoku : ObservableObject {
 		} else {
 			hideNotes = false
 		}
+		
+		currentColor = .blue
 	}
 	
 	//MARK: - Solve
