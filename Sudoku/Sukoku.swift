@@ -65,6 +65,20 @@ class Sudoku : ObservableObject {
 		}
 	}
 	
+	var isValid: Bool {
+		get {
+			for row in 0..<self.board.count {
+				for col in 0..<self.board[row].count {
+					if(board[row][col].number == 0 && board[row][col].pos.count == 0) {
+						return true
+					}
+				}
+			}
+			
+			return false
+		}
+	}
+	
 	//Rows <->
 	//Cols ^
 	
@@ -83,8 +97,30 @@ class Sudoku : ObservableObject {
 		currentColor = .black
 		gererate(given: 0)
 		currentColor = .blue
-		//solve()
 	}
+	
+	init(board: [[SudokuCell]]) {
+		self.board = [[SudokuCell]]()
+		
+		for _ in 0..<9 {
+			var row = [SudokuCell]()
+			for _ in 0..<9 {
+				row.append(SudokuCell())
+			}
+			
+			self.board.append(row)
+		}
+		
+		for row in 0..<board.count {
+			for col in 0..<board.count {
+				setCell(row: row, col: col, to: board[row][col].number)
+			}
+		}
+		
+		
+	}
+	
+	
 	
 	func gererate(given: Int) {
 		setCells(board: [[0, 1, 0, 9, 2, 0, 0, 7, 0],
@@ -127,7 +163,7 @@ class Sudoku : ObservableObject {
 			filterAllSingles()
 		}
 		
-		//Bowman's Bingo
+		bowmansBingo()
 		
 	}
 	
@@ -741,23 +777,61 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: Bowman's Bingo (Brute Force w/ Backtracing)
+	func bowmansBingo() {
+		if(isSolved) {
+			return
+		}
+		
+		if let cell = randomCell() {
+			let randomIndex: Int = Int.random(in: 0..<self.board[cell.0][cell.1].pos.count)
+			let changeTo: Int = self.board[cell.0][cell.1].pos[randomIndex]
+			let newBoard: Sudoku = Sudoku(board: self.board)
+			newBoard.setCell(row: cell.0, col: cell.1, to: changeTo)
+			
+			newBoard.solve()
+			if(newBoard.isValid) {
+				setCell(row: cell.0, col: cell.1, to: changeTo)
+				print("Change cell", cell, changeTo)
+			} else {
+				board[cell.0][cell.1].pos.removeAll(where: {$0 == changeTo})
+				print("Del cell", cell, changeTo)
+			}
+		}
+	}
 	
-	
-	//MARK: - Violations
-	func checkAllViolation() -> Bool {
-		for row in 0..<board.count {
-			for col in 0..<board[row].count {
-				if(checkAllViolation(row: row, col: col)) {
-					return true
-				}
+	//Random Cell
+	func randomCell() -> (Int, Int)? {
+		return randomCell(forRows: [0, 1, 2, 3, 4, 5, 6, 7, 8], length: 2)
+	}
+	func randomCell(forRows: [Int], length: Int) -> (Int, Int)? {
+		if(length > 9) {
+			return nil
+		}
+		
+		if(forRows.count == 0) {
+			return randomCell(forRows: [0, 1, 2, 3, 4, 5, 6, 7, 8], length: length+1)
+		}
+		
+		let rowIndex: Int = Int.random(in: 0..<forRows.count)
+		let row: Int = forRows[rowIndex]
+		var posCols: [Int] = [Int]()
+		
+		for col in 0..<board[row].count {
+			if(board[row][col].number == 0 && board[row][col].pos.count == length) {
+				posCols.append(col)
 			}
 		}
 		
-		return false
-	}
-	
-	func checkAllViolation(row: Int, col: Int) -> Bool {
-		return board[row][col].number == 0 && board[row][col].pos.count == 0
+		if(posCols.count < 1) {
+			var newRows = forRows
+			newRows.removeAll(where: {$0 == row})
+			return randomCell(forRows: newRows, length: length)
+		}
+		
+		let index: Int = Int.random(in: 0..<posCols.count)
+		let col = posCols[index]
+		
+		return (row, col)
 	}
 	
 	//MARK: - Setters
