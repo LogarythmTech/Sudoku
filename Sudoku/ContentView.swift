@@ -26,7 +26,7 @@ struct ContentView: View {
 			}
 			
 			Button(action: {
-				_ = self.sud.stepSolve()
+				self.sud.stepSolve()
 			}) {
 				Text("Step Solve")
 			}

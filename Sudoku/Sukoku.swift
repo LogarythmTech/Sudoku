@@ -160,6 +160,14 @@ class Sudoku : ObservableObject {
 	func restoreBoard() {
 		if let lastSave = saveState.last  {
 			board = lastSave
+			
+			//If you hide then reset, the hide will stay true but not in each cell, thus we reset hideNotes inorder to make sure hideNotes in each cell is updated
+			if(hideNotes) {
+				hideNotes = true
+			} else {
+				hideNotes = false
+			}
+			
 			if(saveState.count > 1) {
 				saveState.removeLast()
 			}
@@ -197,6 +205,13 @@ class Sudoku : ObservableObject {
 			currentColor = .black
 			gererate(given: 0)
 			currentColor = .blue
+		}
+		
+		//If you hide then reset, the hide will stay true but not in each cell, thus we reset hideNotes inorder to make sure hideNotes in each cell is updated
+		if(hideNotes) {
+			hideNotes = true
+		} else {
+			hideNotes = false
 		}
 	}
 	
