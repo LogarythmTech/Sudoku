@@ -60,17 +60,14 @@ class Sudoku : ObservableObject {
 	
 	var isSolved: Bool {
 		get {
-			var flag = true
-			
 			for row in 0..<self.board.count {
 				for col in 0..<self.board[row].count {
 					if(self.board[row][col].number == 0) {
-						flag = false
+						return false
 					}
 				}
 			}
-			
-			return flag
+			return true
 		}
 	}
 	
@@ -104,6 +101,7 @@ class Sudoku : ObservableObject {
 	//Rows <->
 	//Cols ^
 	
+	//MARK: - Initializers
 	init() {
 		board = [[SudokuCell]]()
 		
@@ -120,7 +118,6 @@ class Sudoku : ObservableObject {
 		gererate(given: 0)
 		currentColor = .blue
 	}
-	
 	init(board: [[SudokuCell]]) {
 		self.board = [[SudokuCell]]()
 		
@@ -142,8 +139,6 @@ class Sudoku : ObservableObject {
 		
 	}
 	
-	
-	
 	func gererate(given: Int) {
 		setCells(board: [[0, 1, 0, 9, 2, 0, 0, 7, 0],
 						 [3, 6, 0, 0, 5, 0, 0, 0, 0],
@@ -154,88 +149,114 @@ class Sudoku : ObservableObject {
 						 [0, 0, 0, 0, 0, 0, 0, 0, 9],
 						 [0, 0, 8, 0, 0, 4, 0, 0, 0],
 						 [0, 0, 0, 8, 0, 0, 3, 0, 6]])
+		save()
+	}
+	
+	//MARK: - Save
+	var saveState: [[[SudokuCell]]] = [[[SudokuCell]]]()
+	func save() {
+		saveState.append(self.board)
+	}
+	
+	func restoreBoard() {
+		if let lastSave = saveState.last  {
+			board = lastSave
+			if(saveState.count > 1) {
+				saveState.removeLast()
+			}
+		} else {
+			board = [[SudokuCell]]()
+			for _ in 0..<9 {
+				var row = [SudokuCell]()
+				for _ in 0..<9 {
+					row.append(SudokuCell())
+				}
+				
+				board.append(row)
+			}
+			
+			currentColor = .black
+			gererate(given: 0)
+			currentColor = .blue
+		}
 	}
 	
 	func resetBoard() {
-		board = [[SudokuCell]]()
-		
-		for _ in 0..<9 {
-			var row = [SudokuCell]()
+		if let firstSave = saveState.first  {
+			board = firstSave
+			saveState = [board]
+		} else {
+			board = [[SudokuCell]]()
 			for _ in 0..<9 {
-				row.append(SudokuCell())
+				var row = [SudokuCell]()
+				for _ in 0..<9 {
+					row.append(SudokuCell())
+				}
+				
+				board.append(row)
 			}
 			
-			board.append(row)
+			currentColor = .black
+			gererate(given: 0)
+			currentColor = .blue
 		}
-		
-		currentColor = .black
-		gererate(given: 0)
-		currentColor = .blue
 	}
 	
 	//MARK: - Solve
 	//filters are true when they changed shomthing
 	func solve() {
-		while(!isSolved && isValid) {
+		while !isSolved {
 			stepSolve()
 		}
 		
-		if(!isValid) {
-			print("ERROR: Not Valid")
+		if(isSolved) {
+			for row in 0..<board.count {
+				for col in 0..<board.count {
+					if(board[row][col].backgroundColor == .red) {
+						board[row][col].backgroundColor = .blue
+					}
+				}
+			}
 		}
 	}
 	
 	func stepSolve() {
-		resetDidChange()
 		if(isSolved) {
-			print("Is solved")
-			return
-		}
-		
-		filterAllSingles()
-		if(didChange) {
-			print("Singles")
-			return
-		}
+			for row in 0..<board.count {
+				for col in 0..<board.count {
+					if(board[row][col].backgroundColor == .red) {
+						board[row][col].backgroundColor = .blue
+					}
+				}
+			}
 			
+			return
+		}
+		
+		if(!isValid) {
+			bowmansBingoCont()
+			return
+		}
+		
+		resetDidChange()
+		filterAllSingles()
+		if(didChange) {return}
 		filterAllSinglets()
-		if(didChange) {
-			print("Singlets")
-			return
-		}
-		
+		if(didChange) {return}
 		filterAllBoxLineReduction()
-		if(didChange) {
-			print("Box Line")
-			return
-		}
-		
+		if(didChange) {return}
 		filterAllPointingPairs()
-		if(didChange) {
-			print("Pointing Pair")
-			return
-		}
-		
+		if(didChange) {return}
 		filterAllObviousPairs()
-		if(didChange) {
-			print("Obvious Pairs")
-			return
-		}
-		
+		if(didChange) {return}
 		filterAllObviousTriplets()
-		if(didChange) {
-			print("Obvious Triples")
-			return
-		}
-		
+		if(didChange) {return}
 		filterAllXWing()
-		if(didChange) {
-			print("Xwing")
-			return
-		}
+		if(didChange) {return}
 		
-		bowmansBingo()
-		print("Bingo")
+		if(!didChange) {
+			bowmansBingo()
+		}
 	}
 	
 	//MARK: Singles
@@ -840,26 +861,31 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: Bowman's Bingo (Brute Force w/ Backtracing)
+	var bowmansCells: [(Int, Int, Int)] = [(Int, Int, Int)]()
+	
 	func bowmansBingo() {
-		if(isSolved) {
-			return
-		}
-		
 		if let cell = randomCell() {
 			let randomIndex: Int = Int.random(in: 0..<self.board[cell.0][cell.1].pos.count)
 			let changeTo: Int = self.board[cell.0][cell.1].pos[randomIndex]
-			let newBoard: Sudoku = Sudoku(board: self.board)
-			newBoard.setCell(row: cell.0, col: cell.1, to: changeTo)
+			save()
+			currentColor = .red
+			setCell(row: cell.0, col: cell.1, to: changeTo)
 			
-			newBoard.solve()
-			if(newBoard.isValid) {
-				setCell(row: cell.0, col: cell.1, to: changeTo)
-				print("Change cell", cell, changeTo)
-			} else {
-				board[cell.0][cell.1].pos.removeAll(where: {$0 == changeTo})
-				print("Del cell", cell, changeTo)
+			bowmansCells.append((cell.0, cell.1, changeTo))
+		}
+	}
+	
+	func bowmansBingoCont() {
+		restoreBoard()
+		
+		if let lastSave = bowmansCells.last {
+			board[lastSave.0][lastSave.1].pos.removeAll(where: {$0 == lastSave.2})
+			bowmansCells.removeLast()
+			if(bowmansCells.count == 0) {
+				currentColor = .blue
 			}
 		}
+		
 	}
 	
 	//Random Cell
@@ -908,7 +934,6 @@ class Sudoku : ObservableObject {
 		}
 		
 	}
-	
 	func setCell(row: Int, col: Int, to: Int) {
 		board[row][col].number = to
 		board[row][col].pos = [Int]()
@@ -962,7 +987,6 @@ class Sudoku : ObservableObject {
 		
 		return rows
 	}
-	
 	func get(col: Int) -> [Int] {
 		var cols: [Int] = [Int]()
 		for i in 0..<board.count {
@@ -973,7 +997,6 @@ class Sudoku : ObservableObject {
 		
 		return cols
 	}
-	
 	func get(group: Int) -> [Int] {
 		var groups: [Int] = [Int]()
 		
@@ -1001,7 +1024,6 @@ class Sudoku : ObservableObject {
 		
 		return rows
 	}
-	
 	func getPos(row: Int, excludeCol: Int) -> [[Int]] {
 		var rows: [[Int]] = [[Int]]()
 		for i in 0..<board[row].count {
@@ -1012,7 +1034,6 @@ class Sudoku : ObservableObject {
 		
 		return rows
 	}
-	
 	func getPos(col: Int) -> [[Int]] {
 		var cols: [[Int]] = [[Int]]()
 		for i in 0..<board.count {
@@ -1023,7 +1044,6 @@ class Sudoku : ObservableObject {
 		
 		return cols
 	}
-	
 	func getPos(col: Int, excludeRow: Int) -> [[Int]] {
 		var cols: [[Int]] = [[Int]]()
 		for i in 0..<board.count {
@@ -1034,7 +1054,6 @@ class Sudoku : ObservableObject {
 		
 		return cols
 	}
-	
 	func getPos(group: Int) -> [[Int]] {
 		var groups: [[Int]] = [[Int]]()
 		
@@ -1051,7 +1070,6 @@ class Sudoku : ObservableObject {
 		
 		return groups
 	}
-	
 	func getPos(group: Int, excludeRow: Int, excludeCol: Int) -> [[Int]] {
 		var groups: [[Int]] = [[Int]]()
 		
@@ -1070,30 +1088,34 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: - Remove
+	func removeFrom(row: Int, col: Int, remove: Int) {
+		if(board[row][col].pos.contains(remove)) {
+			board[row][col].pos.removeAll(where: {remove == $0})
+		}
+	}
+	func removeFrom(row: Int, col: Int, remove: [Int]) {
+		for r in remove {
+			removeFrom(row: row, col: col, remove: r)
+		}
+	}
 	func removeFrom(row: Int, remove: [Int], exclude: [Int]) {
 		for col in 0..<board[row].count {
 			if(!exclude.contains(col)) {
 				for r in remove {
-					if(board[row][col].pos.contains(r)) {
-						board[row][col].pos.removeAll(where: {r == $0})
-					}
+					removeFrom(row: row, col: col, remove: r)
 				}
 			}
 		}
 	}
-	
 	func removeFrom(col: Int, remove: [Int], exclude: [Int]) {
 		for row in 0..<board.count {
 			if(!exclude.contains(row)) {
 				for r in remove {
-					if(board[row][col].pos.contains(r)) {
-						board[row][col].pos.removeAll(where: {r == $0})
-					}
+					removeFrom(row: row, col: col, remove: r)
 				}
 			}
 		}
 	}
-	
 	func removeFrom(group: Int, remove: [Int], exclude: [Int]) {
 		for i in 0..<(board.count/3) {
 			for j in 0..<(board[i].count/3) {
@@ -1102,15 +1124,12 @@ class Sudoku : ObservableObject {
 				
 				if(!exclude.contains(i*3 + j)) {
 					for r in remove {
-						if(board[row][col].pos.contains(r)) {
-							board[row][col].pos.removeAll(where: {r == $0})
-						}
+						removeFrom(row: row, col: col, remove: r)
 					}
 				}
 			}
 		}
 	}
-	
 	func removeFrom(row: Int, remove: Int, exclude: [Int]) {
 		for col in 0..<board[row].count {
 			if(!exclude.contains(col) && board[row][col].pos.contains(remove)) {
@@ -1118,7 +1137,6 @@ class Sudoku : ObservableObject {
 			}
 		}
 	}
-	
 	func removeFrom(col: Int, remove: Int, exclude: [Int]) {
 		for row in 0..<board.count {
 			if(!exclude.contains(row) && board[row][col].pos.contains(remove)) {
@@ -1126,7 +1144,6 @@ class Sudoku : ObservableObject {
 			}
 		}
 	}
-	
 	func removeFrom(group: Int, remove: Int, exclude: [Int]) {
 		for i in 0..<(board.count/3) {
 			for j in 0..<(board[i].count/3) {
