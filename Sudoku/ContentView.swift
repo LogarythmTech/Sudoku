@@ -13,7 +13,7 @@ struct ContentView: View {
 	
     var body: some View {
 		VStack {
-			Text("Sudoku")
+			Text("Sudoku").font(.title).fontWeight(.heavy)
 			SudokuView(sud: sud)
 			Toggle(isOn: $sud.hideNotes) {
 				Text("Hide Notes")
@@ -36,6 +36,8 @@ struct ContentView: View {
 			}) {
 				Text("Reset")
 			}
+			
+			Text("Move: \(self.sud.lastMove)")
 			
 			Spacer()
 		}.padding()

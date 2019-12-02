@@ -46,8 +46,6 @@ struct SudokuCell {
 
 class Sudoku : ObservableObject {
 	@Published var board: [[SudokuCell]]
-	var currentColor: Color = .black
-	
 	@Published var hideNotes = false {
 		didSet {
 			for row in 0..<board.count {
@@ -57,7 +55,8 @@ class Sudoku : ObservableObject {
 			}
 		}
 	}
-	
+	@Published var lastMove: String = "No Last Move"
+	var currentColor: Color = .black
 	var isSolved: Bool {
 		get {
 			for row in 0..<self.board.count {
@@ -70,7 +69,6 @@ class Sudoku : ObservableObject {
 			return true
 		}
 	}
-	
 	var isValid: Bool {
 		get {
 			for row in 0..<self.board.count {
@@ -84,7 +82,6 @@ class Sudoku : ObservableObject {
 			return true
 		}
 	}
-	
 	var didChange: Bool {
 		get {
 			for row in 0..<self.board.count {
@@ -215,6 +212,7 @@ class Sudoku : ObservableObject {
 		}
 		
 		currentColor = .blue
+		lastMove = "No Last Move"
 	}
 	
 	//MARK: - Solve
@@ -247,27 +245,29 @@ class Sudoku : ObservableObject {
 		}
 		
 		if(!isValid) {
+			lastMove = "Bowman's Bingo";
 			bowmansBingoCont()
 			return
 		}
 		
 		resetDidChange()
 		filterAllSingles()
-		if(didChange) {return}
+		if(didChange) {lastMove = "Single"; return}
 		filterAllSinglets()
-		if(didChange) {return}
+		if(didChange) {lastMove = "Singlet";lastMove = "Single";return}
 		filterAllBoxLineReduction()
-		if(didChange) {return}
+		if(didChange) {lastMove = "Box Line Reduction"; return}
 		filterAllPointingPairs()
-		if(didChange) {return}
+		if(didChange) {lastMove = "Pointing Pairs"; return}
 		filterAllObviousPairs()
-		if(didChange) {return}
+		if(didChange) {lastMove = "Obvious Pairs"; return}
 		filterAllObviousTriplets()
-		if(didChange) {return}
+		if(didChange) {lastMove = "Obvious Triplets"; return}
 		filterAllXWing()
-		if(didChange) {return}
+		if(didChange) {lastMove = "X Wing"; return}
 		
 		if(!didChange) {
+			lastMove = "Bowman's Bingo";
 			bowmansBingo()
 		}
 	}
