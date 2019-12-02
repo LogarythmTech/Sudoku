@@ -10,8 +10,17 @@ import SwiftUI
 import Foundation
 
 struct SudokuCell {
-	var number: Int = 0
-	var pos: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+	var number: Int = 0 {
+		didSet {
+			didChange = true
+		}
+	}
+	var pos: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9] {
+		didSet {
+			didChange = true
+		}
+	}
+	var didChange: Bool = false
 	
 	var backgroundColor: Color = .blue
 	var foregroundColor: Color = .white
@@ -70,11 +79,24 @@ class Sudoku : ObservableObject {
 			for row in 0..<self.board.count {
 				for col in 0..<self.board[row].count {
 					if(board[row][col].number == 0 && board[row][col].pos.count == 0) {
-						return true
+						return false
 					}
 				}
 			}
 			
+			return true
+		}
+	}
+	
+	var didChange: Bool {
+		get {
+			for row in 0..<self.board.count {
+				for col in 0..<self.board[row].count {
+					if(board[row][col].didChange) {
+						 return true
+					}
+				}
+			}
 			return false
 		}
 	}
@@ -152,23 +174,68 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: - Solve
+	//filters are true when they changed shomthing
 	func solve() {
-		for _ in 0..<100 {
-			filterAllXWing()
-			filterAllObviousTriplets()
-			filterAllObviousPairs()
-			filterAllPointingPairs()
-			filterAllBoxLineReduction()
-			filterAllSinglets()
-			filterAllSingles()
+		while(!isSolved && isValid) {
+			stepSolve()
 		}
 		
-		bowmansBingo()
-		
+		if(!isValid) {
+			print("ERROR: Not Valid")
+		}
 	}
 	
 	func stepSolve() {
-		//TODO: 
+		resetDidChange()
+		if(isSolved) {
+			print("Is solved")
+			return
+		}
+		
+		filterAllSingles()
+		if(didChange) {
+			print("Singles")
+			return
+		}
+			
+		filterAllSinglets()
+		if(didChange) {
+			print("Singlets")
+			return
+		}
+		
+		filterAllBoxLineReduction()
+		if(didChange) {
+			print("Box Line")
+			return
+		}
+		
+		filterAllPointingPairs()
+		if(didChange) {
+			print("Pointing Pair")
+			return
+		}
+		
+		filterAllObviousPairs()
+		if(didChange) {
+			print("Obvious Pairs")
+			return
+		}
+		
+		filterAllObviousTriplets()
+		if(didChange) {
+			print("Obvious Triples")
+			return
+		}
+		
+		filterAllXWing()
+		if(didChange) {
+			print("Xwing")
+			return
+		}
+		
+		bowmansBingo()
+		print("Bingo")
 	}
 	
 	//MARK: Singles
@@ -211,7 +278,6 @@ class Sudoku : ObservableObject {
 						setCell(row: row, col: col, to: i+1)
 					}
 				}
-				
 			}
 		}
 	}
@@ -231,7 +297,6 @@ class Sudoku : ObservableObject {
 						setCell(row: row, col: col, to: i+1)
 					}
 				}
-				
 			}
 		}
 	}
@@ -646,8 +711,6 @@ class Sudoku : ObservableObject {
 		
 		for x in myDic {
 			if(x.value.count == 1) {
-				
-				
 				var exclude: [Int] = [Int]()
 				for i in 0..<3 {
 					let ex: Int = (row % 3)*3 + i
@@ -874,6 +937,15 @@ class Sudoku : ObservableObject {
 		}
 	}
 	
+	//MARK: - Reset
+	func resetDidChange() {
+		for row in 0..<board.count {
+			for col in 0..<board[row].count {
+				board[row][col].didChange = false
+			}
+		}
+	}
+	
 	//MARK: - Getters
 	func getGroup(row: Int, col: Int) -> Int {
 		let group = (row / 3) * 3 + col / 3
@@ -1001,7 +1073,11 @@ class Sudoku : ObservableObject {
 	func removeFrom(row: Int, remove: [Int], exclude: [Int]) {
 		for col in 0..<board[row].count {
 			if(!exclude.contains(col)) {
-				board[row][col].pos.removeAll(where: {remove.contains($0)})
+				for r in remove {
+					if(board[row][col].pos.contains(r)) {
+						board[row][col].pos.removeAll(where: {r == $0})
+					}
+				}
 			}
 		}
 	}
@@ -1009,7 +1085,11 @@ class Sudoku : ObservableObject {
 	func removeFrom(col: Int, remove: [Int], exclude: [Int]) {
 		for row in 0..<board.count {
 			if(!exclude.contains(row)) {
-				board[row][col].pos.removeAll(where: {remove.contains($0)})
+				for r in remove {
+					if(board[row][col].pos.contains(r)) {
+						board[row][col].pos.removeAll(where: {r == $0})
+					}
+				}
 			}
 		}
 	}
@@ -1021,7 +1101,11 @@ class Sudoku : ObservableObject {
 				let col = j + (group % 3) * 3
 				
 				if(!exclude.contains(i*3 + j)) {
-					board[row][col].pos.removeAll(where: {remove.contains($0)})
+					for r in remove {
+						if(board[row][col].pos.contains(r)) {
+							board[row][col].pos.removeAll(where: {r == $0})
+						}
+					}
 				}
 			}
 		}
@@ -1029,7 +1113,7 @@ class Sudoku : ObservableObject {
 	
 	func removeFrom(row: Int, remove: Int, exclude: [Int]) {
 		for col in 0..<board[row].count {
-			if(!exclude.contains(col)) {
+			if(!exclude.contains(col) && board[row][col].pos.contains(remove)) {
 				board[row][col].pos.removeAll(where: {remove == $0})
 			}
 		}
@@ -1037,7 +1121,7 @@ class Sudoku : ObservableObject {
 	
 	func removeFrom(col: Int, remove: Int, exclude: [Int]) {
 		for row in 0..<board.count {
-			if(!exclude.contains(row)) {
+			if(!exclude.contains(row) && board[row][col].pos.contains(remove)) {
 				board[row][col].pos.removeAll(where: {remove == $0})
 			}
 		}
@@ -1049,7 +1133,7 @@ class Sudoku : ObservableObject {
 				let row = i + (group / 3) * 3
 				let col = j + (group % 3) * 3
 				
-				if(!exclude.contains(i*3 + j)) {
+				if(!exclude.contains(i*3 + j) && board[row][col].pos.contains(remove)) {
 					board[row][col].pos.removeAll(where: {remove == $0})
 				}
 			}

@@ -26,6 +26,12 @@ struct ContentView: View {
 			}
 			
 			Button(action: {
+				_ = self.sud.stepSolve()
+			}) {
+				Text("Step Solve")
+			}
+			
+			Button(action: {
 				self.sud.resetBoard()
 			}) {
 				Text("Reset")
