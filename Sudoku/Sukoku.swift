@@ -49,6 +49,22 @@ class Sudoku : ObservableObject {
 		}
 	}
 	
+	var isSolved: Bool {
+		get {
+			var flag = true
+			
+			for row in 0..<self.board.count {
+				for col in 0..<self.board[row].count {
+					if(self.board[row][col].number == 0) {
+						flag = false
+					}
+				}
+			}
+			
+			return flag
+		}
+	}
+	
 	//Rows <->
 	//Cols ^
 	
@@ -71,39 +87,15 @@ class Sudoku : ObservableObject {
 	}
 	
 	func gererate(given: Int) {
-		setCell(row: 0, col: 0, to: 6)
-		setCell(row: 0, col: 5, to: 3)
-		setCell(row: 0, col: 7, to: 2)
-		
-		setCell(row: 1, col: 0, to: 3)
-		setCell(row: 1, col: 2, to: 8)
-		setCell(row: 1, col: 4, to: 1)
-		setCell(row: 1, col: 7, to: 7)
-		
-		setCell(row: 2, col: 4, to: 6)
-		setCell(row: 2, col: 5, to: 8)
-		setCell(row: 2, col: 8, to: 3)
-		
-		setCell(row: 3, col: 7, to: 8)
-		
-		setCell(row: 4, col: 2, to: 6)
-		setCell(row: 4, col: 4, to: 9)
-		setCell(row: 4, col: 6, to: 1)
-		
-		setCell(row: 5, col: 1, to: 4)
-		
-		setCell(row: 6, col: 0, to: 5)
-		setCell(row: 6, col: 3, to: 1)
-		setCell(row: 6, col: 4, to: 4)
-	
-		setCell(row: 7, col: 1, to: 7)
-		setCell(row: 7, col: 4, to: 2)
-		setCell(row: 7, col: 6, to: 4)
-		setCell(row: 7, col: 8, to: 5)
-		
-		setCell(row: 8, col: 1, to: 1)
-		setCell(row: 8, col: 3, to: 5)
-		setCell(row: 8, col: 8, to: 6)
+		setCells(board: [[0, 1, 0, 9, 2, 0, 0, 7, 0],
+						 [3, 6, 0, 0, 5, 0, 0, 0, 0],
+						 [0, 0, 0, 0, 4, 0, 0, 0, 0],
+						 [0, 0, 0, 0, 0, 0, 0, 0, 0],
+						 [6, 0, 0, 0, 0, 0, 5, 4, 0],
+						 [0, 8, 2, 7, 0, 0, 0, 9, 0],
+						 [0, 0, 0, 0, 0, 0, 0, 0, 9],
+						 [0, 0, 8, 0, 0, 4, 0, 0, 0],
+						 [0, 0, 0, 8, 0, 0, 3, 0, 6]])
 	}
 	
 	func resetBoard() {
@@ -125,16 +117,18 @@ class Sudoku : ObservableObject {
 	
 	//MARK: - Solve
 	func solve() {
-		for _ in 0..<10 {
+		for _ in 0..<100 {
+			filterAllObviousTriplets()
 			filterAllObviousPairs()
 			filterAllSinglets()
 			filterAllSingles()
 		}
 		
-		//Bowman's Bingo
 		//Pointing Pairs
 		//Box Line Reduction
 		//Xwing
+		//Bowman's Bingo
+		
 	}
 	
 	func stepSolve() {
@@ -305,18 +299,18 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: Obvious Triplets
-	func filterAllTripletsPairs() {
+	func filterAllObviousTriplets() {
 		for i in 0..<board.count {
-			filterObviousPairs(row: i)
-			filterObviousPairs(col: i)
-			filterObviousPairs(group: i)
+			filterObviousTriplets(row: i)
+			filterObviousTriplets(col: i)
+			filterObviousTriplets(group: i)
 		}
 	}
-	func filterTripletsPairs(row: Int) {
+	func filterObviousTriplets(row: Int) {
 		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
 		
 		for col in 0..<board[row].count {
-			if(board[row][col].pos.count == 2) {
+			if(board[row][col].pos.count == 2 || board[row][col].pos.count == 3) {
 				if let _ = posCount[board[row][col].pos] {
 					posCount[board[row][col].pos]?.append(col)
 				} else {
@@ -324,10 +318,197 @@ class Sudoku : ObservableObject {
 				}
 			}
 		}
-				
+		
+		var arr_key: [Int] = [Int]()
+		
 		for x in posCount {
-			if(x.value.count == 2) {
+			for y in x.key {
+				if(!arr_key.contains(y)) {
+					arr_key.append(y)
+				}
+				
+			}
+		}
+		
+		if(arr_key.count < 3) {
+			return
+		}
+		
+		var pos_keys: [[Int]] = [[Int]]()
+		
+		for i in 0..<(arr_key.count - 2) {
+			for j in (i+1)..<(arr_key.count - 1) {
+				for k in (j+1)..<arr_key.count {
+					pos_keys.append([arr_key[i], arr_key[j], arr_key[k]])
+				}
+			}
+		}
+		
+		var newDic: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for key in pos_keys {
+			for x in posCount {
+				var contains: Int = 0
+				for y in x.key {
+					if(key.contains(y)) {
+						contains += 1
+					}
+				}
+				
+				if((x.key.count == 2 && contains > 1) || (x.key.count == 3 && contains > 2)) {
+					for y in x.value {
+						if let _ = newDic[key] {
+							newDic[key]?.append(y)
+						} else {
+							newDic[key] = [y]
+						}
+					}
+				}
+			}
+		}
+		
+		for x in newDic {
+			if(x.value.count == 3) {
 				removeFrom(row: row, remove: x.key, exclude: x.value)
+			}
+		}
+	}
+	func filterObviousTriplets(col: Int) {
+		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for row in 0..<board.count {
+			if(board[row][col].pos.count == 2 || board[row][col].pos.count == 3) {
+				if let _ = posCount[board[row][col].pos] {
+					posCount[board[row][col].pos]?.append(row)
+				} else {
+					posCount[board[row][col].pos] = [row]
+				}
+			}
+		}
+		
+		var arr_key: [Int] = [Int]()
+		
+		for x in posCount {
+			for y in x.key {
+				if(!arr_key.contains(y)) {
+					arr_key.append(y)
+				}
+				
+			}
+		}
+		
+		if(arr_key.count < 3) {
+			return
+		}
+		
+		var pos_keys: [[Int]] = [[Int]]()
+		
+		for i in 0..<(arr_key.count - 2) {
+			for j in (i+1)..<(arr_key.count - 1) {
+				for k in (j+1)..<arr_key.count {
+					pos_keys.append([arr_key[i], arr_key[j], arr_key[k]])
+				}
+			}
+		}
+		
+		var newDic: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for key in pos_keys {
+			for x in posCount {
+				var contains: Int = 0
+				for y in x.key {
+					if(key.contains(y)) {
+						contains += 1
+					}
+				}
+				
+				if((x.key.count == 2 && contains > 1) || (x.key.count == 3 && contains > 2)) {
+					for y in x.value {
+						if let _ = newDic[key] {
+							newDic[key]?.append(y)
+						} else {
+							newDic[key] = [y]
+						}
+					}
+				}
+			}
+		}
+		
+		for x in newDic {
+			if(x.value.count == 3) {
+				removeFrom(col: col, remove: x.key, exclude: x.value)
+			}
+		}
+	}
+	func filterObviousTriplets(group: Int) {
+		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for i in 0..<(board.count/3) {
+			for j in 0..<(board[i].count/3) {
+				let row = i + (group / 3) * 3
+				let col = j + (group % 3) * 3
+				
+			if(board[row][col].pos.count == 2 || board[row][col].pos.count == 3) {
+				if let _ = posCount[board[row][col].pos] {
+					posCount[board[row][col].pos]?.append(i*3 + j)
+				} else {
+					posCount[board[row][col].pos] = [i*3 + j]
+				}
+			}
+		}
+		}
+		
+		var arr_key: [Int] = [Int]()
+		
+		for x in posCount {
+			for y in x.key {
+				if(!arr_key.contains(y)) {
+					arr_key.append(y)
+				}
+				
+			}
+		}
+		
+		if(arr_key.count < 3) {
+			return
+		}
+		
+		var pos_keys: [[Int]] = [[Int]]()
+		
+		for i in 0..<(arr_key.count - 2) {
+			for j in (i+1)..<(arr_key.count - 1) {
+				for k in (j+1)..<arr_key.count {
+					pos_keys.append([arr_key[i], arr_key[j], arr_key[k]])
+				}
+			}
+		}
+		
+		var newDic: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for key in pos_keys {
+			for x in posCount {
+				var contains: Int = 0
+				for y in x.key {
+					if(key.contains(y)) {
+						contains += 1
+					}
+				}
+				
+				if((x.key.count == 2 && contains > 1) || (x.key.count == 3 && contains > 2)) {
+					for y in x.value {
+						if let _ = newDic[key] {
+							newDic[key]?.append(y)
+						} else {
+							newDic[key] = [y]
+						}
+					}
+				}
+			}
+		}
+		
+		for x in newDic {
+			if(x.value.count == 3) {
+				removeFrom(group: group, remove: x.key, exclude: x.value)
 			}
 		}
 	}
@@ -353,6 +534,17 @@ class Sudoku : ObservableObject {
 	
 	
 	//MARK: - Setters
+	func setCells(board: [[Int]]) {
+		for row in 0..<board.count {
+			for col in 0..<board[row].count {
+				if(board[row][col] != 0) {
+					setCell(row: row, col: col, to: board[row][col])
+				}
+			}
+		}
+		
+	}
+	
 	func setCell(row: Int, col: Int, to: Int) {
 		board[row][col].number = to
 		board[row][col].pos = [Int]()
