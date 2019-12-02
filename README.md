@@ -1,5 +1,5 @@
 # Sudoku
-[Solve](#solve-puzzle) and/or [Generate](##generate-puzzle) a Sudoku Game.
+[Solve](#solve-puzzle) and/or [Generate](#generate-puzzle) a Sudoku Game.
 
 ## Generate Puzzle
 Todo
