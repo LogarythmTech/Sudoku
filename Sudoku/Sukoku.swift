@@ -118,15 +118,15 @@ class Sudoku : ObservableObject {
 	//MARK: - Solve
 	func solve() {
 		for _ in 0..<100 {
+			filterAllXWing()
 			filterAllObviousTriplets()
 			filterAllObviousPairs()
+			filterAllPointingPairs()
+			filterAllBoxLineReduction()
 			filterAllSinglets()
 			filterAllSingles()
 		}
 		
-		//Pointing Pairs
-		//Box Line Reduction
-		//Xwing
 		//Bowman's Bingo
 		
 	}
@@ -247,7 +247,7 @@ class Sudoku : ObservableObject {
 				}
 			}
 		}
-				
+		
 		for x in posCount {
 			if(x.value.count == 2) {
 				removeFrom(row: row, remove: x.key, exclude: x.value)
@@ -266,7 +266,7 @@ class Sudoku : ObservableObject {
 				}
 			}
 		}
-				
+		
 		for x in posCount {
 			if(x.value.count == 2) {
 				removeFrom(col: col, remove: x.key, exclude: x.value)
@@ -290,7 +290,7 @@ class Sudoku : ObservableObject {
 				}
 			}
 		}
-				
+		
 		for x in posCount {
 			if(x.value.count == 2) {
 				removeFrom(group: group, remove: x.key, exclude: x.value)
@@ -448,14 +448,14 @@ class Sudoku : ObservableObject {
 				let row = i + (group / 3) * 3
 				let col = j + (group % 3) * 3
 				
-			if(board[row][col].pos.count == 2 || board[row][col].pos.count == 3) {
-				if let _ = posCount[board[row][col].pos] {
-					posCount[board[row][col].pos]?.append(i*3 + j)
-				} else {
-					posCount[board[row][col].pos] = [i*3 + j]
+				if(board[row][col].pos.count == 2 || board[row][col].pos.count == 3) {
+					if let _ = posCount[board[row][col].pos] {
+						posCount[board[row][col].pos]?.append(i*3 + j)
+					} else {
+						posCount[board[row][col].pos] = [i*3 + j]
+					}
 				}
 			}
-		}
 		}
 		
 		var arr_key: [Int] = [Int]()
@@ -514,6 +514,234 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: Pointing Pairs
+	func filterAllPointingPairs() {
+		for i in 0..<board.count {
+			filterPointingPairsRow(group: i)
+			filterPointingPairsCol(group: i)
+		}
+	}
+	func filterPointingPairsRow(group: Int) {
+		var myDic: [Int : [Int]] = [Int : [Int]]() //key: cell value (1-9) value: which row it is in
+		
+		for i in 0..<(board.count/3) {
+			for j in 0..<(board[i].count/3) {
+				let row = i + (group / 3) * 3
+				let col = j + (group % 3) * 3
+				
+				for x in board[row][col].pos {
+					if let value = myDic[x] {
+						if(!value.contains(row)) {
+							myDic[x]?.append(row)
+						}
+					} else {
+						myDic[x] = [row]
+					}
+				}
+			}
+		}
+		
+		for x in myDic {
+			if(x.value.count == 1) {
+				var exclude: [Int] = [Int]()
+				for i in 0..<3 {
+					let ex: Int = ((group % 3) * 3) + i
+					exclude.append(ex)
+				}
+				removeFrom(row: x.value[0], remove: x.key, exclude: exclude)
+			}
+		}
+	}
+	func filterPointingPairsCol(group: Int) {
+		var myDic: [Int : [Int]] = [Int : [Int]]() //key: cell value (1-9) value: which row it is in
+		
+		for i in 0..<(board.count/3) {
+			for j in 0..<(board[i].count/3) {
+				let row = i + (group / 3) * 3
+				let col = j + (group % 3) * 3
+				
+				for x in board[row][col].pos {
+					if let value = myDic[x] {
+						if(!value.contains(col)) {
+							myDic[x]?.append(col)
+						}
+					} else {
+						myDic[x] = [col]
+					}
+				}
+			}
+		}
+		
+		for x in myDic {
+			if(x.value.count == 1) {
+				var exclude: [Int] = [Int]()
+				for i in 0..<3 {
+					let ex: Int = ((group / 3) * 3) + i
+					exclude.append(ex)
+				}
+				removeFrom(col: x.value[0], remove: x.key, exclude: exclude)
+			}
+		}
+	}
+	
+	//MARK: Box Line Reduction
+	//Reverse of Pointing Pairs
+	func filterAllBoxLineReduction() {
+		for i in 0..<board.count {
+			filterAllBoxLineReduction(row: i)
+			filterAllBoxLineReduction(col: i)
+		}
+	}
+	func filterAllBoxLineReduction(row: Int) {
+		var myDic: [Int : [Int]] = [Int : [Int]]() //key: cell value (1-9) value: which row it is in
+		
+		for col in 0..<board.count {
+			let group = getGroup(row: row, col: col)
+			
+			for x in board[row][col].pos {
+				if let value = myDic[x] {
+					if(!value.contains(group)) {
+						myDic[x]?.append(group)
+					}
+				} else {
+					myDic[x] = [group]
+				}
+			}
+		}
+		
+		for x in myDic {
+			if(x.value.count == 1) {
+				
+				
+				var exclude: [Int] = [Int]()
+				for i in 0..<3 {
+					let ex: Int = (row % 3)*3 + i
+					exclude.append(ex)
+				}
+				removeFrom(group: x.value[0], remove: x.key, exclude: exclude)
+			}
+		}
+	}
+	func filterAllBoxLineReduction(col: Int) {
+		var myDic: [Int : [Int]] = [Int : [Int]]() //key: cell value (1-9) value: which row it is in
+		
+		for row in 0..<board.count {
+			let group = getGroup(row: row, col: col)
+			
+			for x in board[row][col].pos {
+				if let value = myDic[x] {
+					if(!value.contains(group)) {
+						myDic[x]?.append(group)
+					}
+				} else {
+					myDic[x] = [group]
+				}
+			}
+		}
+		
+		for x in myDic {
+			if(x.value.count == 1) {
+				var exclude: [Int] = [Int]()
+				for i in 0..<3 {
+					let ex: Int = (col % 3) + (i * 3)
+					exclude.append(ex)
+				}
+				removeFrom(group: x.value[0], remove: x.key, exclude: exclude)
+			}
+		}
+	}
+	
+	//MARK: X-Wing
+	//Only two possible numbers (1-9) in each row (i.e. 4 only appers once) -> List rows
+	//Two Rows must be in different groups
+	func filterAllXWing() {
+		filterXWingCol()
+		filterXWingRow()
+	}
+	func filterXWingRow() {
+		var arr: [[Int : [Int]]] = [[Int : [Int]]]()
+		
+		for i in 0..<board.count {
+			arr.append(filterXWing(row: i))
+		}
+		
+		for i in 0..<arr.count {
+			for j in ((i / 3)*3 + 3)..<arr.count {
+				for x in arr[i] {
+					if let comp = arr[j][x.key] {
+						if(x.value[0] == comp[0] && x.value[1] == comp[1]) { //Arrays should be order
+							removeFrom(col: comp[0], remove: x.key, exclude: [i, j])
+							removeFrom(col: comp[1], remove: x.key, exclude: [i, j])
+						}
+					}
+				}
+			}
+		}
+	}
+	func filterXWing(row: Int) -> [Int : [Int]] {
+		var myDic: [Int : [Int]] = [Int: [Int]]() //key: number, value: row it appears
+		
+		for col in 0..<board[row].count {
+			for x in board[row][col].pos {
+				if let _ = myDic[x] {
+					myDic[x]?.append(col)
+				} else {
+					myDic[x] = [col]
+				}
+			}
+		}
+		
+		for x in myDic {
+			if(x.value.count != 2) {
+				myDic.removeValue(forKey: x.key)
+			}
+		}
+	
+		return myDic
+	}
+	func filterXWingCol() {
+		var arr: [[Int : [Int]]] = [[Int : [Int]]]()
+		
+		for i in 0..<board.count {
+			arr.append(filterXWing(col: i))
+		}
+		
+		for i in 0..<arr.count {
+			for j in ((i / 3)*3 + 3)..<arr.count {
+				for x in arr[i] {
+					if let comp = arr[j][x.key] {
+						if(x.value[0] == comp[0] && x.value[1] == comp[1]) { //Arrays should be order
+							removeFrom(row: comp[0], remove: x.key, exclude: [i, j])
+							removeFrom(row: comp[1], remove: x.key, exclude: [i, j])
+						}
+					}
+				}
+			}
+		}
+	}
+	func filterXWing(col: Int) -> [Int : [Int]] {
+		var myDic: [Int : [Int]] = [Int: [Int]]() //key: number, value: row it appears
+		
+		for row in 0..<board.count {
+			for x in board[row][col].pos {
+				if let _ = myDic[x] {
+					myDic[x]?.append(row)
+				} else {
+					myDic[x] = [row]
+				}
+			}
+		}
+		
+		for x in myDic {
+			if(x.value.count != 2) {
+				myDic.removeValue(forKey: x.key)
+			}
+		}
+	
+		return myDic
+	}
+	
+	//MARK: Bowman's Bingo (Brute Force w/ Backtracing)
+	
 	
 	//MARK: - Violations
 	func checkAllViolation() -> Bool {
@@ -531,7 +759,6 @@ class Sudoku : ObservableObject {
 	func checkAllViolation(row: Int, col: Int) -> Bool {
 		return board[row][col].number == 0 && board[row][col].pos.count == 0
 	}
-	
 	
 	//MARK: - Setters
 	func setCells(board: [[Int]]) {
@@ -562,7 +789,7 @@ class Sudoku : ObservableObject {
 		
 		//group
 		let group = getGroup(row: row, col: col)
-				
+		
 		for i in 0..<(board.count/3) {
 			for j in 0..<(board[i].count/3) {
 				let myRow = i + (group / 3) * 3
@@ -603,7 +830,7 @@ class Sudoku : ObservableObject {
 	
 	func get(group: Int) -> [Int] {
 		var groups: [Int] = [Int]()
-
+		
 		for i in 0..<(board.count/3) {
 			for j in 0..<(board[i].count/3) {
 				let row = i + (group / 3) * 3
@@ -664,7 +891,7 @@ class Sudoku : ObservableObject {
 	
 	func getPos(group: Int) -> [[Int]] {
 		var groups: [[Int]] = [[Int]]()
-
+		
 		for i in 0..<(board.count/3) {
 			for j in 0..<(board[i].count/3) {
 				let row = i + (group / 3) * 3
@@ -681,7 +908,7 @@ class Sudoku : ObservableObject {
 	
 	func getPos(group: Int, excludeRow: Int, excludeCol: Int) -> [[Int]] {
 		var groups: [[Int]] = [[Int]]()
-
+		
 		for i in 0..<(board.count/3) {
 			for j in 0..<(board[i].count/3) {
 				let row = i + (group / 3) * 3
@@ -721,6 +948,35 @@ class Sudoku : ObservableObject {
 				
 				if(!exclude.contains(i*3 + j)) {
 					board[row][col].pos.removeAll(where: {remove.contains($0)})
+				}
+			}
+		}
+	}
+	
+	func removeFrom(row: Int, remove: Int, exclude: [Int]) {
+		for col in 0..<board[row].count {
+			if(!exclude.contains(col)) {
+				board[row][col].pos.removeAll(where: {remove == $0})
+			}
+		}
+	}
+	
+	func removeFrom(col: Int, remove: Int, exclude: [Int]) {
+		for row in 0..<board.count {
+			if(!exclude.contains(row)) {
+				board[row][col].pos.removeAll(where: {remove == $0})
+			}
+		}
+	}
+	
+	func removeFrom(group: Int, remove: Int, exclude: [Int]) {
+		for i in 0..<(board.count/3) {
+			for j in 0..<(board[i].count/3) {
+				let row = i + (group / 3) * 3
+				let col = j + (group % 3) * 3
+				
+				if(!exclude.contains(i*3 + j)) {
+					board[row][col].pos.removeAll(where: {remove == $0})
 				}
 			}
 		}
