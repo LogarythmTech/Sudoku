@@ -13,8 +13,17 @@ struct SudokuCell {
 	var number: Int = 0
 	var pos: [Int] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 	
+	var backgroundColor: Color = .blue
+	var foregroundColor: Color = .white
+	
+	var hideNotes: Bool = false
+	
 	func getHide() -> [Bool] {
 		var hide: [Bool] = [true, true, true, true, true, true, true, true, true]
+		
+		if(hideNotes) {
+			return hide
+		}
 		
 		for i in pos {
 			if((i-1) < hide.count && (i) > 0) {
@@ -26,8 +35,19 @@ struct SudokuCell {
 	}
 }
 
-class Sudoku {
-	var board: [[SudokuCell]]
+class Sudoku : ObservableObject {
+	@Published var board: [[SudokuCell]]
+	var currentColor: Color = .black
+	
+	@Published var hideNotes = false {
+		didSet {
+			for row in 0..<board.count {
+				for col in 0..<board[row].count {
+					board[row][col].hideNotes = hideNotes
+				}
+			}
+		}
+	}
 	
 	//Rows <->
 	//Cols ^
@@ -44,44 +64,63 @@ class Sudoku {
 			board.append(row)
 		}
 		
+		currentColor = .black
 		gererate(given: 0)
-		solve()
+		currentColor = .blue
+		//solve()
 	}
 	
 	func gererate(given: Int) {
-		setCell(row: 0, col: 3, to: 6)
-		setCell(row: 0, col: 7, to: 9)
+		setCell(row: 0, col: 0, to: 6)
+		setCell(row: 0, col: 5, to: 3)
+		setCell(row: 0, col: 7, to: 2)
 		
-		setCell(row: 1, col: 5, to: 4)
-		setCell(row: 1, col: 6, to: 2)
-		setCell(row: 1, col: 8, to: 3)
+		setCell(row: 1, col: 0, to: 3)
+		setCell(row: 1, col: 2, to: 8)
+		setCell(row: 1, col: 4, to: 1)
+		setCell(row: 1, col: 7, to: 7)
 		
-		setCell(row: 2, col: 0, to: 1)
-		setCell(row: 2, col: 7, to: 5)
-		setCell(row: 2, col: 8, to: 7)
+		setCell(row: 2, col: 4, to: 6)
+		setCell(row: 2, col: 5, to: 8)
+		setCell(row: 2, col: 8, to: 3)
 		
-		setCell(row: 3, col: 2, to: 3)
-		setCell(row: 3, col: 4, to: 6)
+		setCell(row: 3, col: 7, to: 8)
 		
-		setCell(row: 4, col: 0, to: 7)
-		setCell(row: 4, col: 3, to: 9)
-		setCell(row: 4, col: 4, to: 3)
-		setCell(row: 4, col: 5, to: 5)
-		setCell(row: 4, col: 8, to: 6)
+		setCell(row: 4, col: 2, to: 6)
+		setCell(row: 4, col: 4, to: 9)
+		setCell(row: 4, col: 6, to: 1)
 		
-		setCell(row: 5, col: 4, to: 8)
-		setCell(row: 5, col: 6, to: 1)
+		setCell(row: 5, col: 1, to: 4)
 		
-		setCell(row: 6, col: 0, to: 8)
-		setCell(row: 6, col: 1, to: 9)
-		setCell(row: 6, col: 8, to: 5)
+		setCell(row: 6, col: 0, to: 5)
+		setCell(row: 6, col: 3, to: 1)
+		setCell(row: 6, col: 4, to: 4)
+	
+		setCell(row: 7, col: 1, to: 7)
+		setCell(row: 7, col: 4, to: 2)
+		setCell(row: 7, col: 6, to: 4)
+		setCell(row: 7, col: 8, to: 5)
 		
-		setCell(row: 7, col: 0, to: 3)
-		setCell(row: 7, col: 2, to: 4)
-		setCell(row: 7, col: 3, to: 1)
+		setCell(row: 8, col: 1, to: 1)
+		setCell(row: 8, col: 3, to: 5)
+		setCell(row: 8, col: 8, to: 6)
+	}
+	
+	func resetBoard() {
+		board = [[SudokuCell]]()
 		
-		setCell(row: 8, col: 1, to: 6)
-		setCell(row: 8, col: 5, to: 8)
+		for _ in 0..<9 {
+			var row = [SudokuCell]()
+			for _ in 0..<9 {
+				row.append(SudokuCell())
+			}
+			
+			board.append(row)
+		}
+		
+		currentColor = .black
+		gererate(given: 0)
+		currentColor = .blue
 	}
 	
 	//MARK: - Solve
@@ -91,6 +130,15 @@ class Sudoku {
 			filterAllSinglets()
 			filterAllSingles()
 		}
+		
+		//Bowman's Bingo
+		//Pointing Pairs
+		//Box Line Reduction
+		//Xwing
+	}
+	
+	func stepSolve() {
+		//TODO: 
 	}
 	
 	//MARK: Singles
@@ -108,7 +156,7 @@ class Sudoku {
 		}
 	}
 	
-	//MARK: Singlets
+	//MARK: Singlets (Last Remaining Cell)
 	//When a row only has 1 in the possiblites
 	func filterAllSinglets() {
 		for i in 0..<board.count {
@@ -257,13 +305,58 @@ class Sudoku {
 	}
 	
 	//MARK: Obvious Triplets
+	func filterAllTripletsPairs() {
+		for i in 0..<board.count {
+			filterObviousPairs(row: i)
+			filterObviousPairs(col: i)
+			filterObviousPairs(group: i)
+		}
+	}
+	func filterTripletsPairs(row: Int) {
+		var posCount: [[Int] : [Int]] = [[Int] : [Int]]()
+		
+		for col in 0..<board[row].count {
+			if(board[row][col].pos.count == 2) {
+				if let _ = posCount[board[row][col].pos] {
+					posCount[board[row][col].pos]?.append(col)
+				} else {
+					posCount[board[row][col].pos] = [col]
+				}
+			}
+		}
+				
+		for x in posCount {
+			if(x.value.count == 2) {
+				removeFrom(row: row, remove: x.key, exclude: x.value)
+			}
+		}
+	}
 	
 	//MARK: Pointing Pairs
+	
+	//MARK: - Violations
+	func checkAllViolation() -> Bool {
+		for row in 0..<board.count {
+			for col in 0..<board[row].count {
+				if(checkAllViolation(row: row, col: col)) {
+					return true
+				}
+			}
+		}
+		
+		return false
+	}
+	
+	func checkAllViolation(row: Int, col: Int) -> Bool {
+		return board[row][col].number == 0 && board[row][col].pos.count == 0
+	}
+	
 	
 	//MARK: - Setters
 	func setCell(row: Int, col: Int, to: Int) {
 		board[row][col].number = to
 		board[row][col].pos = [Int]()
+		board[row][col].backgroundColor = currentColor
 		
 		//Row
 		for i in 0..<board[row].count {

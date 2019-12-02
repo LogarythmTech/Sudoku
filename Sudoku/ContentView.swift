@@ -9,8 +9,30 @@
 import SwiftUI
 
 struct ContentView: View {
+	@ObservedObject var sud: Sudoku = Sudoku()
+	
     var body: some View {
-		SudokuView().padding()
+		VStack {
+			Text("Sudoku")
+			SudokuView(sud: sud)
+			Toggle(isOn: $sud.hideNotes) {
+				Text("Hide Notes")
+			}
+			
+			Button(action: {
+				self.sud.solve()
+			}) {
+				Text("Solve")
+			}
+			
+			Button(action: {
+				self.sud.resetBoard()
+			}) {
+				Text("Reset")
+			}
+			
+			Spacer()
+		}.padding()
     }
 }
 

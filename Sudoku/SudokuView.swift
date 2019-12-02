@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SudokuView: View {
-	let sud: Sudoku = Sudoku()
+	@ObservedObject var sud: Sudoku
 	
     var body: some View {
 		VStack(spacing: 1) {
@@ -109,7 +109,7 @@ struct SudokuCellView: View {
 			SudokuCellNoteView(hide: myCell.getHide())
 			
 			if(myCell.number > 0 && myCell.number < 10) {
-				SudokuNumberView(number: myCell.number)
+				SudokuNumberView(number: myCell.number, backgroundColor: myCell.backgroundColor, foregroundColor: myCell.foregroundColor)
 			}
 		}
     }
@@ -118,6 +118,6 @@ struct SudokuCellView: View {
 
 struct SudokuView_Previews: PreviewProvider {
     static var previews: some View {
-		SudokuView().previewLayout(.fixed(width: 500, height: 500))
+		SudokuView(sud: Sudoku()).previewLayout(.fixed(width: 500, height: 500))
     }
 }
