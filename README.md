@@ -128,20 +128,20 @@ Bowman's Bingo is used when you can't use any of the above tactics anymore, thus
 
 You get to here with above algoithms and can't go anymore. So you choses a random cell (highlighted yellow) (perveribly one with only two possiblites)
 
-![Stuck](/Images/Bowmans_Bingo/image_1.png)
+![Stuck](/Images/Bowmans_Bingo/image_0.png)
 
 Then, you set that cell's (highlighted yellow) value's to be one of the possiblites.
 
-![Guess and Check](/Images/Bowmans_Bingo/image_2.png)
+![Guess and Check](/Images/Bowmans_Bingo/image_1.png)
 
 Contine solving with above tactics (red text). You then get two choices, either the puzzle gets solved (you guessed correctly) or, in this case, you get an invalid board, notice the empty cell (highlighted yellow).
 
-![Invalid](/Images/Bowmans_Bingo/image_3.png)
+![Invalid](/Images/Bowmans_Bingo/image_2.png)
 
 You know that the guess was wrong, thus you reset back to the before your guess (remove the valuse that are in red), then you can delete that possiblity for that cell (highlighted yellow).
 
-![Remove](/Images/Bowmans_Bingo/image_4.png)
+![Remove](/Images/Bowmans_Bingo/image_3.png)
 
 The reason you want to prioities a cell that has two possiblities first, is that now that cell (highlighted yellow) only has one possilbity, allowing you to know the value for that cell.
 
-![Yay!!](/Images/Bowmans_Bingo/image_5.png)
+![Yay!!](/Images/Bowmans_Bingo/image_4.png)
