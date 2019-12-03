@@ -15,29 +15,60 @@ struct ContentView: View {
 		VStack {
 			Text("Sudoku").font(.title).fontWeight(.heavy)
 			SudokuView(sud: sud)
+			
+			Text("Move: \(self.sud.lastMove)")
+			
 			Toggle(isOn: $sud.hideNotes) {
 				Text("Hide Notes")
 			}
 			
-			Button(action: {
-				self.sud.solve()
-			}) {
-				Text("Solve")
+			HStack {
+				Button(action: {
+					self.sud.solve()
+				}) {
+					Text("Solve")
+						.padding(.leading).padding(.trailing)
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(10)
+				}
+				
+				Button(action: {
+					self.sud.stepSolve()
+				}) {
+					Text("Step Solve")
+						.padding(.leading).padding(.trailing)
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
 			}
 			
-			Button(action: {
-				self.sud.stepSolve()
-			}) {
-				Text("Step Solve")
+			HStack {
+				Button(action: {
+					self.sud.resetBoard()
+				}) {
+					Text("Reset")
+						.padding(.leading).padding(.trailing)
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
+				
+				Button(action: {
+					self.sud.gererate(given: 0)
+				}) {
+					Text("Generate")
+						.padding(.leading).padding(.trailing)
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
 			}
-			
-			Button(action: {
-				self.sud.resetBoard()
-			}) {
-				Text("Reset")
-			}
-			
-			Text("Move: \(self.sud.lastMove)")
 			
 			Spacer()
 		}.padding()

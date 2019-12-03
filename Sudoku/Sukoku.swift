@@ -9,6 +9,10 @@
 import SwiftUI
 import Foundation
 
+enum Difficulty {
+	case Easy, Medium, Hard, Expert
+}
+
 struct SudokuCell {
 	var number: Int = 0 {
 		didSet {
@@ -102,18 +106,7 @@ class Sudoku : ObservableObject {
 	init() {
 		board = [[SudokuCell]]()
 		
-		for _ in 0..<9 {
-			var row = [SudokuCell]()
-			for _ in 0..<9 {
-				row.append(SudokuCell())
-			}
-			
-			board.append(row)
-		}
-		
-		currentColor = .black
 		gererate(given: 0)
-		currentColor = .blue
 	}
 	init(board: [[SudokuCell]]) {
 		self.board = [[SudokuCell]]()
@@ -137,16 +130,31 @@ class Sudoku : ObservableObject {
 	}
 	
 	func gererate(given: Int) {
-		setCells(board: [[4, 0, 0, 9, 0, 1, 0, 0, 0],
-						 [0, 0, 0, 0, 0, 5, 0, 7, 0],
-						 [0, 0, 0, 0, 0, 0, 3, 0, 0],
-						 [0, 0, 8, 0, 0, 0, 4, 0, 0],
-						 [0, 0, 2, 0, 0, 7, 9, 0, 0],
-						 [0, 0, 7, 5, 2, 0, 0, 8, 0],
-						 [6, 0, 0, 0, 4, 0, 1, 0, 2],
-						 [0, 0, 0, 6, 1, 0, 0, 0, 0],
-						 [2, 0, 9, 0, 0, 0, 0, 0, 0]])
+		board = [[SudokuCell]]()
+		
+		for _ in 0..<9 {
+			var row = [SudokuCell]()
+			for _ in 0..<9 {
+				row.append(SudokuCell())
+			}
+			
+			board.append(row)
+		}
+		
+		currentColor = .black
+		solve()
+		
+		//TODO: Remove
+		for _ in 0..<60 {
+			let randomCell: (Int, Int)? = randomSolvedCell()
+			if let cell = randomCell {
+				removeCell(row: cell.0, col: cell.1)
+				resetPos()
+			}
+		}
+		
 		save()
+		currentColor = .blue
 	}
 	
 	//MARK: - Save
@@ -179,9 +187,7 @@ class Sudoku : ObservableObject {
 				board.append(row)
 			}
 			
-			currentColor = .black
 			gererate(given: 0)
-			currentColor = .blue
 		}
 	}
 	func resetBoard() {
@@ -270,6 +276,24 @@ class Sudoku : ObservableObject {
 			lastMove = "Bowman's Bingo";
 			bowmansBingo()
 		}
+	}
+	
+	//MARK: Generate Tests
+	func solveWith(difficulty: Difficulty) {
+		//Easy: Singles and Singlets
+		
+		if(difficulty == .Easy) { return }
+		
+		//Medium: Singles, Singlets, Box Line Reduction, and Pointing Pairs
+		
+		if(difficulty == .Medium) { return }
+		
+		//Hard: Singles, Singlets, Box Line Reduction, Pointing Pairs, Obvious Doubles, Obvious Triplets
+		
+		if(difficulty == .Hard) { return }
+		
+		//Evil: Any, But only 1 Bowman's Bingo
+		
 	}
 	
 	//MARK: Singles
@@ -934,6 +958,34 @@ class Sudoku : ObservableObject {
 		return (row, col)
 	}
 	
+	func randomSolvedCell() -> (Int, Int)? {
+		return randomSolvedCell(forRows: [0, 1, 2, 3, 4, 5, 6, 7, 8])
+	}
+	
+	func randomSolvedCell(forRows: [Int]) -> (Int, Int)? {
+		let rowIndex: Int = Int.random(in: 0..<forRows.count)
+		let row: Int = forRows[rowIndex]
+		var posCols: [Int] = [Int]()
+		
+		for col in 0..<board[row].count {
+			if(board[row][col].number != 0) {
+				posCols.append(col)
+			}
+		}
+		
+		if(posCols.count < 1) {
+			var newRows = forRows
+			newRows.removeAll(where: {$0 == row})
+			return randomSolvedCell(forRows: newRows)
+		}
+		
+		let index: Int = Int.random(in: 0..<posCols.count)
+		let col = posCols[index]
+		
+		return (row, col)
+	}
+	
+	
 	//MARK: - Setters
 	func setCells(board: [[Int]]) {
 		for row in 0..<board.count {
@@ -978,6 +1030,44 @@ class Sudoku : ObservableObject {
 		for row in 0..<board.count {
 			for col in 0..<board[row].count {
 				board[row][col].didChange = false
+			}
+		}
+	}
+	
+	func resetPos(row: Int, col: Int) {
+		if(board[row][col].number == 0) {
+			board[row][col].pos = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+			
+			for i in 0..<board.count {
+				let groupRow = i/3 + (getGroup(row: row, col: col) / 3) * 3
+				let groupCol = i%3 + (getGroup(row: row, col: col) % 3) * 3
+				
+				board[row][col].pos.removeAll(where: {$0 == board[row][i].number})
+				board[row][col].pos.removeAll(where: {$0 == board[i][col].number})
+				board[row][col].pos.removeAll(where: {$0 == board[groupRow][groupCol].number})
+				
+			}
+		} else {
+			board[row][col].pos = [Int]()
+		}
+	}
+	
+	func resetPos() {
+		for row in 0..<board.count {
+			for col in 0..<board[row].count {
+				if(board[row][col].number == 0) {
+					board[row][col].pos = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+					
+					for i in 0..<board.count {
+						let groupRow = i/3 + (getGroup(row: row, col: col) / 3) * 3
+						let groupCol = i%3 + (getGroup(row: row, col: col) % 3) * 3
+						
+						board[row][col].pos.removeAll(where: {$0 == board[row][i].number})
+						board[row][col].pos.removeAll(where: {$0 == board[i][col].number})
+						board[row][col].pos.removeAll(where: {$0 == board[groupRow][groupCol].number})
+						
+					}
+				}
 			}
 		}
 	}
@@ -1099,6 +1189,13 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: - Remove
+	//MARK: Cell
+	func removeCell(row: Int, col: Int) {
+		board[row][col].number = 0
+		resetPos(row: row, col: col)
+	}
+	
+	//MARK: Pos
 	func removeFrom(row: Int, col: Int, remove: Int) {
 		if(board[row][col].pos.contains(remove)) {
 			board[row][col].pos.removeAll(where: {remove == $0})
