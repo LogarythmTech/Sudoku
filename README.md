@@ -7,7 +7,7 @@ Todo
 ## Solve Puzzle
 It solve's the puzzle using the same algoithm's and tactics humans use to solve it. First, for every empty cell, give a list of possible valuse that list can be. 
 
-![Start](/Images/Bowmans_Bingo/image_0.png)
+![Possible Choices](/Images/Bowmans_Bingo/image_0.png)
 
 If there are no value and no possible choice's, the puzzle must be invalid.
 
@@ -28,11 +28,11 @@ If there are only one possible choice for a certian cell, then the cell's valuse
 
 In the highlighted cell, there is only one possible choice.
 
-![Start](/Images/Singles/image_0.png)
+![Singles Before](/Images/Singles/image_0.png)
 
 So we give that cells value that possiblity.
 
-![Start](/Images/Singles/image_1.png)
+![Singles After](/Images/Singles/image_1.png)
 
 ### Singlets
 Each row, col, or group must have one of each number (1-9), thus if in the possiblies, a row only has one cell that have the possablity to be an certian number, then that cell *must* be that certian number. This works for cols and groups the same.
@@ -41,11 +41,11 @@ Each row, col, or group must have one of each number (1-9), thus if in the possi
 
 In the highlighted col (blue), only the highlighted (yellow) cell has a possablity of being a one. 
 
-![Start](/Images/Singlets/image_0.png)
+![Singlets Before](/Images/Singlets/image_0.png)
 
 Thus, the highlighted (yellow) cell, must have a value of one.
 
-![Start](/Images/Singlets/image_1.png)
+![Singlets After](/Images/Singlets/image_1.png)
 
 ### Pointing Pairs
 When in a group, if there is only 2-3 possible choices for a certian number *and* all of these possiblities line up in a row or col. Then the rest of the row/col (the part that does not belong to the group) does not have the possiblity to be said number.
@@ -54,11 +54,11 @@ When in a group, if there is only 2-3 possible choices for a certian number *and
 
 The highlighted cells are the only ones in their group that has a possiblity to be a three. Thus, for said group, the three must be one of the two cells.
 
-![Start](/Images/Pointing_Pairs/image_0.png)
+![Pointing Pairs Before](/Images/Pointing_Pairs/image_0.png)
 
 Since the two cells are also in the same row, it means that the three for that row, must be in that group so the other cells along that row (excluding the two in the group) can't be three, so we remove that from the possblities. Notice the highlighed cells now don't have a possiblity of being three, when origally there had. 
 
-![Start](/Images/Pointing_Pairs/image_1.png)
+![Pointing Pairs After](/Images/Pointing_Pairs/image_1.png)
 
 ### Box Line Reduction
 Similir to Pointing Pairs, except reverse.
@@ -69,11 +69,11 @@ When in a row or col, if there all the possablities for a certian number, lie in
 
 Notice, that in the highlighted col, the only cells that have a possiblity of being three (in yellow) are in the same group.
 
-![Start](/Images/Box_Line_Reduction/image_0.png)
+![Box Line Reduction Before](/Images/Box_Line_Reduction/image_0.png)
 
 Since one of the two (blue) cells above have to be three, the others cells in the same group, can't be a three, such as the (yellow) cell.
 
-![Start](/Images/Box_Line_Reduction/image_1.png)
+![Box Line Reduction After](/Images/Box_Line_Reduction/image_1.png)
 
 ### Obvious Pairs
 When is the same row, col, or group, if there is a pair of cells that have the same two possiblites, then those two cells must be one of those two options, making the others in the same row, col, or group (which other one that the pair is the same) can't be one of those two options thus, we can remove that as an possablity.
@@ -82,11 +82,11 @@ When is the same row, col, or group, if there is a pair of cells that have the s
 
 Notice the highlighed (blue) cells, have the same two possablites, five or three, *and* they lie in the same row.
 
-![Start](/Images/Obvious_Pairs/image_0.png)
+![Obvious Pairs Before](/Images/Obvious_Pairs/image_0.png)
 
 This means that the other cells in the row, pertically the (yellow) cells, can't be a five or a three.
 
-![Start](/Images/Obvious_Pairs/image_1.png)
+![Obvious Pairs After](/Images/Obvious_Pairs/image_1.png)
 
 ### Obvious Triplets
 Similar to Obvious Pairs, just three instead of two.
@@ -97,11 +97,11 @@ When is the same row, col, or group, if there is a triplet (3) of cells that hav
 
 Notice the highlighed (yellow) cells lie in the same row and can be a two, three, eight and nothing else.
 
-![Start](/Images/Obvious_Triplets/image_0.png)
+![Obvious Triplets Before](/Images/Obvious_Triplets/image_0.png)
 
 This means that the other cells in the row, like the (blue) cells, can not be a two, three, eight, so we remove that as a possablity.
 
-![Start](/Images/Obvious_Triplets/image_1.png)
+![Obvious Triplets After](/Images/Obvious_Triplets/image_1.png)
 
 
 ### X-Wing
@@ -111,15 +111,15 @@ If in two different columns (or row) there is a number that only has a possablit
 
 Notice the highlighed (blue) cells lie in the same col and only are the only ones in their col that have the possablity of being four. The same applies to the (yellow) cells. Also notice that the (yellow) cells match the row index of the (blue) cells.
 
-![Start](/Images/X-Wing/image_0.png)
+![X-Wing Before](/Images/X-Wing/image_0.png)
 
-Thus creating an "X".
+Thus creating an "X" (blue and green lines).
 
-![Start](/Images/X-Wing/image_1.png)
+![Create an X](/Images/X-Wing/image_1.png)
 
 Since a four must lie in two of the four cells, and it must be they must be on diffent rows, for the rest of the cells on the two rows, highlighted (red), can not be a four.
 
-![Start](/Images/X-Wing/image_2.png)
+![X-Wing After](/Images/X-Wing/image_2.png)
 
 ### Bowman's Bingo
 Bowman's Bingo is used when you can't use any of the above tactics anymore, thus you ecentially guess and check. If the puzzel turns invalid by your guess (such as have a cell that has no value but has no possible choices either), then you know that your guess was wrong allowing you to remove that guess for the possible choices for that cell. If your guess is right, you don't need to do anything, and finish the puzzel.
