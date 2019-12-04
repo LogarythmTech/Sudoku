@@ -1,15 +1,6 @@
 # Sudoku
 [Solve](#solve-puzzle) and/or [Generate](#generate-puzzle) a Sudoku Game.
 
-## Todo's
-- Make the Generator and Solve functions more effiecient
-- Create function that steps threw by cell, not whole board
-    - Right now, when you press Step Solve, it changes all singles or all box line reduction's, I just want it to do one at a time.
-- Allow more continunity between each difficulty
-- Update UI in order for users to put in there own Sudoku puzzel + solve the puzzel themselve in app with notes and such
-- Add Image / Text Reconognition in order to scan Sudoku puzzel's in
-- Save puzzel that user is working on 
-
 ## Generate Puzzle
 1) Start out with an already solved puzzel.
     - There a many methods to do this, just search Google.
