@@ -59,7 +59,7 @@ struct ContentView: View {
 				}
 				
 				Button(action: {
-					self.sud.gererate(given: 0)
+					self.sud.gererate(difficulty: .Medium, given: 100)
 				}) {
 					Text("Generate")
 						.padding(.leading).padding(.trailing)

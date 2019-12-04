@@ -106,7 +106,7 @@ class Sudoku : ObservableObject {
 	init() {
 		board = [[SudokuCell]]()
 		
-		gererate(given: 0)
+		gererate(difficulty: .Easy, given: 60)
 	}
 	init(board: [[SudokuCell]]) {
 		self.board = [[SudokuCell]]()
@@ -129,7 +129,7 @@ class Sudoku : ObservableObject {
 		
 	}
 	
-	func gererate(given: Int) {
+	func gererate(difficulty: Difficulty, given: Int) {
 		board = [[SudokuCell]]()
 		
 		for _ in 0..<9 {
@@ -145,11 +145,27 @@ class Sudoku : ObservableObject {
 		solve()
 		
 		//TODO: Remove
-		for _ in 0..<60 {
+		for _ in 0..<given {
+			save()
 			let randomCell: (Int, Int)? = randomSolvedCell()
 			if let cell = randomCell {
 				removeCell(row: cell.0, col: cell.1)
 				resetPos()
+				
+				save()
+				let didSolve: Bool = solveWith(difficulty: difficulty)
+				restoreBoard() //Goes back to right before didSolve
+				if(!didSolve) {
+					restoreBoard() //Goes back to before we placed the random Cell
+				}
+			}
+		}
+		
+		wipeSave()
+		
+		for row in 0..<board.count {
+			for col in 0..<board[row].count {
+				board[row][col].backgroundColor = .black
 			}
 		}
 		
@@ -161,6 +177,9 @@ class Sudoku : ObservableObject {
 	var saveState: [[[SudokuCell]]] = [[[SudokuCell]]]()
 	func save() {
 		saveState.append(self.board)
+	}
+	func wipeSave() {
+		saveState = [[[SudokuCell]]]()
 	}
 	func restoreBoard() {
 		if let lastSave = saveState.last  {
@@ -187,7 +206,7 @@ class Sudoku : ObservableObject {
 				board.append(row)
 			}
 			
-			gererate(given: 0)
+			gererate(difficulty: .Easy, given: 60)
 		}
 	}
 	func resetBoard() {
@@ -206,7 +225,7 @@ class Sudoku : ObservableObject {
 			}
 			
 			currentColor = .black
-			gererate(given: 0)
+			gererate(difficulty: .Easy, given: 60)
 			currentColor = .blue
 		}
 		
@@ -279,21 +298,65 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: Generate Tests
-	func solveWith(difficulty: Difficulty) {
-		//Easy: Singles and Singlets
+	//Easy: Singles and Singlets
+	//Medium: Singles, Singlets, Box Line Reduction, and Pointing Pairs
+	//Hard: Singles, Singlets, Box Line Reduction, Pointing Pairs, Obvious Doubles, Obvious Triplets
+	//Evil: Any, But only 1 Bowman's Bingo
+	
+	func solveWith(difficulty: Difficulty) -> Bool {
+		var countBowmans: Int = 0
 		
-		if(difficulty == .Easy) { return }
+		repeat {
+			if(isSolved) {
+				return true
+			}
+			
+			if(!isValid) {
+				if(difficulty == .Expert) {
+					bowmansBingoCont()
+					continue
+				} else {
+					return false
+				}
+			}
+			
+			resetDidChange()
+			filterAllSingles()
+			if(didChange) {continue}
+			
+			filterAllSinglets()
+			if(didChange || difficulty == .Easy) {continue}
+			
+			filterAllBoxLineReduction()
+			if(didChange) {continue}
+			
+			filterAllPointingPairs()
+			if(didChange || difficulty == .Medium) {continue}
+			
+			filterAllObviousPairs()
+			if(didChange) {continue}
+			
+			filterAllObviousTriplets()
+			if(didChange || difficulty == .Hard) {continue}
+			
+			filterAllXWing()
+			if(didChange) {continue}
+			
+			if(countBowmans < 2) {
+				bowmansBingo()
+				countBowmans += 1
+			}
+			
+			
+			
+			
+		} while didChange
 		
-		//Medium: Singles, Singlets, Box Line Reduction, and Pointing Pairs
+		if(isSolved) {
+			return true
+		}
 		
-		if(difficulty == .Medium) { return }
-		
-		//Hard: Singles, Singlets, Box Line Reduction, Pointing Pairs, Obvious Doubles, Obvious Triplets
-		
-		if(difficulty == .Hard) { return }
-		
-		//Evil: Any, But only 1 Bowman's Bingo
-		
+		return false
 	}
 	
 	//MARK: Singles
