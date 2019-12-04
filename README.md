@@ -3,24 +3,22 @@
 
 ## Generate Puzzle
 1) Start out with an already solved puzzel.
-  - There a many methods to do this, just search Google.
-  - I did it by solving a completly empty sudoku puzzel using the method's below.
-    - **Pros:** Due to the way I setup the solve methods, the puzzel will be extremly randomized.
-    - **Cons:** It is ineffienct, expecially compared to the other method's available. 
+    - There a many methods to do this, just search Google.
+    - I did it by solving a completly empty sudoku puzzel using the method's below.
+      - **Pros:** Due to the way I setup the solve methods, the puzzel will be extremly randomized.
+      - **Cons:** It is ineffienct, expecially compared to the other method's available. 
 
 2) Remove a Random Cell in the puzzel.
 3) Try to solve the puzzel.
-  - In order to change the difficulty, I limited the methods to solve the puzzel
-    - **Easy:** Singles and Singlets
-    - **Medium:** Easy Methods + Box Line Reduction and Pointing Pairs
-    - **Hard:** Easy and Medium Methods + Obvious Pairs and Triplets
-    - **Expert:** All Methods, limited to 1-2 Bowman's Bingo only
+    - In order to change the difficulty, I limited the methods to solve the puzzel
+      - **Easy:** Singles and Singlets
+      - **Medium:** Easy Methods + Box Line Reduction and Pointing Pairs
+      - **Hard:** Easy and Medium Methods + Obvious Pairs and Triplets
+      - **Expert:** All Methods, limited to 1-2 Bowman's Bingo only
 5) Check how many solutions your current puzzel can get.
 4) If you can't solve the puzzel or you get multiple solutions to the puzzel Backtrace. If you only get one soultion and can still solve the puzzel repeat steps 2-4
     - You repeat a certian number of times until you get the desired number of known cells. I also changed this based on difficulty.
     
-*Note* The hardest part about generating the puzzel, is continuity of difficulty levels. In other words, it is very hard to make all easy puzzels around the same difficulty.
-
 ## Solve Puzzle
 It solve's the puzzle using the same algoithm's and tactics humans use to solve it. First, for every empty cell, give a list of possible valuse that list can be. 
 
