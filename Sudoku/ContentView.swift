@@ -12,7 +12,7 @@ struct ContentView: View {
 	@ObservedObject var sud: Sudoku = Sudoku()
 	
     var body: some View {
-		VStack {
+		VStack(spacing: 10) {
 			Text("Sudoku").font(.title).fontWeight(.heavy)
 			SudokuView(sud: sud)
 			
@@ -31,7 +31,7 @@ struct ContentView: View {
 						.background(Color.blue)
 						.foregroundColor(.white)
 						.font(.body)
-						.cornerRadius(10)
+						.cornerRadius(5)
 				}
 				
 				Button(action: {
