@@ -15,6 +15,7 @@
 		D1481F1123923322001249B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1481F0F23923322001249B2 /* LaunchScreen.storyboard */; };
 		D1481F192392332E001249B2 /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1481F182392332E001249B2 /* SudokuView.swift */; };
 		D1481F1B23931CB7001249B2 /* Sukoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1481F1A23931CB7001249B2 /* Sukoku.swift */; };
+		D1DE365F23A0885A00570FCB /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DE365E23A0885A00570FCB /* TestView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		D1481F1223923322001249B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D1481F182392332E001249B2 /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuView.swift; sourceTree = "<group>"; };
 		D1481F1A23931CB7001249B2 /* Sukoku.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sukoku.swift; sourceTree = "<group>"; };
+		D1DE365E23A0885A00570FCB /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				D1481F0823923322001249B2 /* ContentView.swift */,
 				D1481F182392332E001249B2 /* SudokuView.swift */,
 				D1481F1A23931CB7001249B2 /* Sukoku.swift */,
+				D1DE365E23A0885A00570FCB /* TestView.swift */,
 				D1481F0A23923322001249B2 /* Assets.xcassets */,
 				D1481F0F23923322001249B2 /* LaunchScreen.storyboard */,
 				D1481F1223923322001249B2 /* Info.plist */,
@@ -152,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1DE365F23A0885A00570FCB /* TestView.swift in Sources */,
 				D1481F0523923322001249B2 /* AppDelegate.swift in Sources */,
 				D1481F192392332E001249B2 /* SudokuView.swift in Sources */,
 				D1481F0723923322001249B2 /* SceneDelegate.swift in Sources */,

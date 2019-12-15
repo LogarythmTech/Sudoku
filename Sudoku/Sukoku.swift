@@ -48,9 +48,14 @@ struct SudokuCell {
 	}
 }
 
+/**
+Takes in / or generates a sudoku puzzel, then shows how to solve the puzzel
+- Todo:
+	- make it faster
+*/
 class Sudoku : ObservableObject {
 	@Published var board: [[SudokuCell]]
-	@Published var hideNotes = false {
+	@Published var hideNotes = true {
 		didSet {
 			for row in 0..<board.count {
 				for col in 0..<board[row].count {
@@ -128,51 +133,7 @@ class Sudoku : ObservableObject {
 		
 		
 	}
-	
-	func gererate(difficulty: Difficulty, given: Int) {
-		board = [[SudokuCell]]()
 		
-		for _ in 0..<9 {
-			var row = [SudokuCell]()
-			for _ in 0..<9 {
-				row.append(SudokuCell())
-			}
-			
-			board.append(row)
-		}
-		
-		currentColor = .black
-		solve()
-		
-		//TODO: Remove
-		for _ in 0..<given {
-			save()
-			let randomCell: (Int, Int)? = randomSolvedCell()
-			if let cell = randomCell {
-				removeCell(row: cell.0, col: cell.1)
-				resetPos()
-				
-				save()
-				let didSolve: Bool = solveWith(difficulty: difficulty)
-				restoreBoard() //Goes back to right before didSolve
-				if(!didSolve) {
-					restoreBoard() //Goes back to before we placed the random Cell
-				}
-			}
-		}
-		
-		wipeSave()
-		
-		for row in 0..<board.count {
-			for col in 0..<board[row].count {
-				board[row][col].backgroundColor = .black
-			}
-		}
-		
-		save()
-		currentColor = .blue
-	}
-	
 	//MARK: - Save
 	var saveState: [[[SudokuCell]]] = [[[SudokuCell]]]()
 	func save() {
@@ -209,24 +170,13 @@ class Sudoku : ObservableObject {
 			gererate(difficulty: .Easy, given: 60)
 		}
 	}
+	
 	func resetBoard() {
 		if let firstSave = saveState.first  {
 			board = firstSave
 			saveState = [board]
 		} else {
-			board = [[SudokuCell]]()
-			for _ in 0..<9 {
-				var row = [SudokuCell]()
-				for _ in 0..<9 {
-					row.append(SudokuCell())
-				}
-				
-				board.append(row)
-			}
-			
-			currentColor = .black
-			gererate(difficulty: .Easy, given: 60)
-			currentColor = .blue
+			wipeBoard()
 		}
 		
 		//If you hide then reset, the hide will stay true but not in each cell, thus we reset hideNotes inorder to make sure hideNotes in each cell is updated
@@ -240,8 +190,66 @@ class Sudoku : ObservableObject {
 		lastMove = "No Last Move"
 	}
 	
+	func wipeBoard() {
+		board = [[SudokuCell]]()
+		for _ in 0..<9 {
+			var row = [SudokuCell]()
+			for _ in 0..<9 {
+				row.append(SudokuCell())
+			}
+			
+			board.append(row)
+		}
+		currentColor = .black
+	}
+	
+	//MARK: - Generate
+	
+	/**
+	Generate a new Sudoku Puzzel
+	
+	- parameters:
+		- difficulty: The difficulty level of the new generated sudoku puzzel
+		- given: How much to try to remove
+	- Attention: given is not the actuall number that will be removed, but rather how many tries to remove
+	*/
+	func gererate(difficulty: Difficulty, given: Int) {
+		wipeBoard()
+		
+		currentColor = .black
+		solve()
+		
+		for _ in 0..<given {
+			save()
+			let randomCell: (Int, Int)? = randomSolvedCell()
+			if let cell = randomCell {
+				removeCell(row: cell.0, col: cell.1)
+				resetPos()
+				
+				save()
+				let didSolve: Bool = solveWith(difficulty: difficulty)
+				restoreBoard() //Goes back to right before didSolve
+				if(!didSolve) {
+					restoreBoard() //Goes back to before we placed the random Cell
+				}
+			}
+		}
+		
+		wipeSave()
+		
+		for row in 0..<board.count {
+			for col in 0..<board[row].count {
+				board[row][col].backgroundColor = .black
+			}
+		}
+		
+		save()
+		currentColor = .blue
+	}
+	
 	//MARK: - Solve
 	func solve() {
+		currentColor = .blue
 		while !isSolved {
 			stepSolve()
 		}
@@ -298,11 +306,40 @@ class Sudoku : ObservableObject {
 	}
 	
 	//MARK: Generate Tests
-	//Easy: Singles and Singlets
-	//Medium: Singles, Singlets, Box Line Reduction, and Pointing Pairs
-	//Hard: Singles, Singlets, Box Line Reduction, Pointing Pairs, Obvious Doubles, Obvious Triplets
-	//Evil: Any, But only 1 Bowman's Bingo
 	
+	/**
+	Solve the puzzel while only using certain algorithms determined by difficulty level
+	
+	- parameters:
+		- difficulty: The difficulty level of the new generated sudoku puzzel as well as what algoriths can be used to solve said puzzel.
+			- **Easy:**
+				- Singles
+				- Singlets
+			- **Medium:**
+				- Singles
+				- Singlets
+				- Box Line Reduction
+				- Pointing Pairs
+			- **Hard:**
+				- Singles
+				- Singlets
+				- Box Line Reduction
+				- Pointing Pairs
+				- Obvious Doubles
+				- Obvious Triplets
+			- **Evil:**
+				- Singles
+				- Singlets
+				- Box Line Reduction
+				- Pointing Pairs
+				- Obvious Doubles
+				- Obvious Triplets
+				- X-Wing
+				- Bowman's Bingo (But only one)
+	- returns:
+		- **True:**  If can be solved
+		- **False:** If can't be solved
+	*/
 	func solveWith(difficulty: Difficulty) -> Bool {
 		var countBowmans: Int = 0
 		

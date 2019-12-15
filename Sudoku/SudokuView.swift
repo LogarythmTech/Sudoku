@@ -10,59 +10,68 @@ import SwiftUI
 
 struct SudokuView: View {
 	@ObservedObject var sud: Sudoku
+	@Binding var selectedCell: (row: Int, col: Int, group: Int)?
 	
     var body: some View {
 		VStack(spacing: 2) {
-			VStack(spacing: 0.5) {
-				SudokuRowView(sud: self.sud, row: 0)
-				SudokuRowView(sud: self.sud, row: 1)
-				SudokuRowView(sud: self.sud, row: 2)
+			HStack(spacing: 2) {
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 0)
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 1)
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 2)
 			}
 			
-			VStack(spacing: 0.5) {
-				SudokuRowView(sud: self.sud, row: 3)
-				SudokuRowView(sud: self.sud, row: 4)
-				SudokuRowView(sud: self.sud, row: 5)
+			HStack(spacing: 2) {
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 3)
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 4)
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 5)
 			}
 			
-			VStack(spacing: 0.5) {
-				SudokuRowView(sud: self.sud, row: 6)
-				SudokuRowView(sud: self.sud, row: 7)
-				SudokuRowView(sud: self.sud, row: 8)
+			HStack(spacing: 2) {
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 6)
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 7)
+				SudokuGroupView(sud: self.sud, selectedCell: $selectedCell, group: 8)
 			}
 		}.background(Color.black).border(Color.black, width: 2)
 		.aspectRatio(1, contentMode: .fit)
     }
 }
 
-struct SudokuRowView: View {
+struct SudokuGroupView: View {
 	@ObservedObject var sud: Sudoku
-	let row: Int
+	@Binding var selectedCell: (row: Int, col: Int, group: Int)?
+	
+	let group: Int
+	
+	func getRow(i: Int) -> Int {
+		return i + (group / 3) * 3
+	}
+	
+	func getCol(j: Int) -> Int {
+		return j + (group % 3) * 3
+	}
 	
     var body: some View {
-		HStack(spacing: 2) {
+		VStack(spacing: 0.5) {
 			HStack(spacing: 0.5) {
-				SudokuCellView(myCell: self.sud.board[row][0])
-				SudokuCellView(myCell: self.sud.board[row][1])
-				SudokuCellView(myCell: self.sud.board[row][2])
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 0), col: getCol(j: 0), group: self.group), selectedCell: $selectedCell)
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 0), col: getCol(j: 1), group: self.group), selectedCell: $selectedCell)
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 0), col: getCol(j: 2), group: self.group), selectedCell: $selectedCell)
 			}
 			
 			HStack(spacing: 0.5) {
-				SudokuCellView(myCell: self.sud.board[row][3])
-				SudokuCellView(myCell: self.sud.board[row][4])
-				SudokuCellView(myCell: self.sud.board[row][5])
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 1), col: getCol(j: 0), group: self.group), selectedCell: $selectedCell)
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 1), col: getCol(j: 1), group: self.group), selectedCell: $selectedCell)
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 1), col: getCol(j: 2), group: self.group), selectedCell: $selectedCell)
 			}
 			
 			HStack(spacing: 0.5) {
-				SudokuCellView(myCell: self.sud.board[row][6])
-				SudokuCellView(myCell: self.sud.board[row][7])
-				SudokuCellView(myCell: self.sud.board[row][8])
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 2), col: getCol(j: 0), group: self.group), selectedCell: $selectedCell)
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 2), col: getCol(j: 1), group: self.group), selectedCell: $selectedCell)
+				SudokuCellView(sud: sud, myCell: (row: getRow(i: 2), col: getCol(j: 2), group: self.group), selectedCell: $selectedCell)
 			}
 		}
 	}
 }
-
-
 
 struct SudokuNumberView: View {
 	let number: Int
@@ -95,7 +104,6 @@ struct SudokuNumberView: View {
 			default:
 				return "1.square.fill"
 			}
-			
 		}
 	}
 	
@@ -141,21 +149,36 @@ struct SudokuCellNoteView: View {
 }
 
 struct SudokuCellView: View {
-	let myCell: SudokuCell
+	@ObservedObject var sud: Sudoku
+	let myCell: (row: Int, col: Int, group: Int)
+	@Binding var selectedCell: (row: Int, col: Int, group: Int)?
 	
     var body: some View {
-		ZStack {
-			SudokuCellNoteView(hide: myCell.getHide())
-			
-			if(myCell.number > 0 && myCell.number < 10) {
-				SudokuNumberView(number: myCell.number, backgroundColor: myCell.backgroundColor, foregroundColor: myCell.foregroundColor)
+		Button(action: {
+			self.selectedCell = self.myCell
+		}) {
+			ZStack {
+				if(self.sud.board[myCell.row][myCell.col].number > 0 && self.sud.board[myCell.row][myCell.col].number < 10) {
+					SudokuNumberView(number: self.sud.board[myCell.row][myCell.col].number, backgroundColor: self.sud.board[myCell.row][myCell.col].backgroundColor, foregroundColor: self.sud.board[myCell.row][myCell.col].foregroundColor)
+				} else if(!self.sud.hideNotes) {
+					SudokuCellNoteView(hide: self.sud.board[myCell.row][myCell.col].getHide())
+				} else {
+					Rectangle().foregroundColor(.white)
+				}
+				
+				
+				if(self.selectedCell != nil && self.selectedCell!.row == self.myCell.row) {
+					Rectangle().foregroundColor(.blue).opacity(0.1)
+				}
+					
+				if(self.selectedCell != nil && self.selectedCell!.col == self.myCell.col) {
+					Rectangle().foregroundColor(.blue).opacity(0.1)
+				}
+					
+				if(self.selectedCell != nil && self.selectedCell!.group == self.myCell.group) {
+					Rectangle().foregroundColor(.blue).opacity(0.1)
+				}
 			}
 		}
-    }
-}
-
-struct SudokuView_Previews: PreviewProvider {
-    static var previews: some View {
-		SudokuView(sud: Sudoku()).previewLayout(.fixed(width: 500, height: 500))
     }
 }
