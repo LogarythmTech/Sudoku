@@ -26,8 +26,8 @@ struct SudokuCell {
 	}
 	var didChange: Bool = false
 	
-	var backgroundColor: Color = .blue
-	var foregroundColor: Color = .white
+	var backgroundColor: Color = .white
+	var foregroundColor: Color = .blue
 	
 	var hideNotes: Bool = false
 	
@@ -239,7 +239,7 @@ class Sudoku : ObservableObject {
 		
 		for row in 0..<board.count {
 			for col in 0..<board[row].count {
-				board[row][col].backgroundColor = .black
+				board[row][col].foregroundColor = .black
 			}
 		}
 		
@@ -257,8 +257,8 @@ class Sudoku : ObservableObject {
 		if(isSolved) {
 			for row in 0..<board.count {
 				for col in 0..<board.count {
-					if(board[row][col].backgroundColor == .red) {
-						board[row][col].backgroundColor = .blue
+					if(board[row][col].foregroundColor == .red) {
+						board[row][col].foregroundColor = .blue
 					}
 				}
 			}
@@ -268,8 +268,8 @@ class Sudoku : ObservableObject {
 		if(isSolved) {
 			for row in 0..<board.count {
 				for col in 0..<board.count {
-					if(board[row][col].backgroundColor == .red) {
-						board[row][col].backgroundColor = .blue
+					if(board[row][col].foregroundColor == .red) {
+						board[row][col].foregroundColor = .blue
 					}
 				}
 			}
@@ -1100,7 +1100,7 @@ class Sudoku : ObservableObject {
 	func setCell(row: Int, col: Int, to: Int) {
 		board[row][col].number = to
 		board[row][col].pos = [Int]()
-		board[row][col].backgroundColor = currentColor
+		board[row][col].foregroundColor = currentColor
 		
 		//Row
 		for i in 0..<board[row].count {

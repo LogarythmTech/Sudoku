@@ -13,11 +13,11 @@ struct ContentView: View {
 	@State var selectedCell: (row: Int, col: Int, group: Int)? = nil
 	@State var fillNotes: Bool = false
 	
+	let frame: CGSize = CGSize(width: 400, height: 400)
+	
     var body: some View {
-		VStack(spacing: 10) {
-			Text("Sudoku").font(.title).fontWeight(.heavy)
-			SudokuView(sud: sud, selectedCell: $selectedCell)
-			
+		VStack {
+			SudokuView(sud: self.sud, selectedCell: self.$selectedCell)
 			HStack {
 				numberButtonView(number: 1, sud: self.sud, selectedCell: $selectedCell, fillNotes: $fillNotes)
 				numberButtonView(number: 2, sud: self.sud, selectedCell: $selectedCell, fillNotes: $fillNotes)
@@ -31,93 +31,88 @@ struct ContentView: View {
 			}.padding(.leading).padding(.trailing)
 			
 			Text("Move: \(self.sud.lastMove)")
-			
-			HStack {
-				Button(action: {
-					self.fillNotes = !self.fillNotes
-				}) {
-					Text(self.sud.hideNotes ? "Notes Off" : "Notes On")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
-				
-				Button(action: {
-					self.sud.hideNotes = !self.sud.hideNotes
-				}) {
-					Text(self.sud.hideNotes ? "Show Notes" : "Hide Notes")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
-				
-				Button(action: {
-					//self.sud.gererate(difficulty: .Medium, given: 100)
-				}) {
-					Text("Check")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
-				
-				Button(action: {
-					self.sud.solve()
-				}) {
-					Text("Solve")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
-				
-				Button(action: {
-					self.sud.stepSolve()
-				}) {
-					Text("Step Solve")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
+						
+						HStack {
+							Button(action: {
+								self.fillNotes = !self.fillNotes
+							}) {
+								Text(self.sud.hideNotes ? "Notes Off" : "Notes On")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
+							
+							Button(action: {
+								self.sud.hideNotes = !self.sud.hideNotes
+							}) {
+								Text(self.sud.hideNotes ? "Show Notes" : "Hide Notes")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
+							
+							Button(action: {
+								//self.sud.gererate(difficulty: .Medium, given: 100)
+							}) {
+								Text("Check")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
+							
+							Button(action: {
+								self.sud.solve()
+							}) {
+								Text("Solve")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
+							
+							Button(action: {
+								self.sud.stepSolve()
+							}) {
+								Text("Step Solve")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
 
-				Button(action: {
-					self.sud.resetBoard()
-				}) {
-					Text("Reset")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
-				
-				Button(action: {
-					self.sud.gererate(difficulty: .Medium, given: 100)
-				}) {
-					Text("Generate")
-						.padding()
-						.background(Color.blue)
-						.foregroundColor(.white)
-						.font(.body)
-						.cornerRadius(5)
-				}
-			}
-			
-			Spacer()
-		}.padding()
-		
-		//estView()
+							Button(action: {
+								self.sud.resetBoard()
+							}) {
+								Text("Reset")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
+							
+							Button(action: {
+								self.sud.gererate(difficulty: .Medium, given: 100)
+							}) {
+								Text("Generate")
+									.padding()
+									.background(Color.blue)
+									.foregroundColor(.white)
+									.font(.body)
+									.cornerRadius(5)
+							}
+						}
+		}
     }
 }
-
 
 struct numberButtonView : View {
 	let number: Int
@@ -158,14 +153,15 @@ struct numberButtonView : View {
 				if(self.fillNotes) {
 					//TODO: self.sud.set
 				} else {
-					self.sud.setCell(row: select.row, col: select.col, to: self.number)
+					if(self.sud.board[select.row][select.col].number == 0) {
+						self.sud.setCell(row: select.row, col: select.col, to: self.number)
+					}
 				}
 			}
 		}) {
 			Image(systemName: self.imageName).resizable().aspectRatio(1, contentMode: .fit)
 		}
 	}
-	
 }
 
 struct ContentView_Previews: PreviewProvider {
