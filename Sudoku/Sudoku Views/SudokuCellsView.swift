@@ -13,12 +13,17 @@ struct SudokuCellsView: View {
 	
 	let frame: CGSize
 	
+	func getGroup(row: Int, col: Int) -> Int {
+		let group = (row / 3) * 3 + col / 3
+		return group
+	}
+	
 	var body: some View {
 		VStack(spacing: 0) {
 			ForEach(0..<9) { i in
 				HStack(spacing: 0) {
 					ForEach(0..<9) { j in
-						SudokuCellView(sud: self.sud, myCell: (row: i, col: j, group: 0), selectedCell: self.$selectedCell, frame: self.frame)
+						SudokuCellView(sud: self.sud, myCell: (row: i, col: j, group: self.getGroup(row: i, col: j)), selectedCell: self.$selectedCell, frame: self.frame)
 					}
 				}
 			}
