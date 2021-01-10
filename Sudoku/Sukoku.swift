@@ -13,6 +13,10 @@ enum Difficulty {
 	case Easy, Medium, Hard, Expert
 }
 
+enum GameMode {
+	case Create, Play, Bingo
+}
+
 struct SudokuCell {
 	var number: Int = 0 {
 		didSet {
@@ -50,8 +54,6 @@ struct SudokuCell {
 
 /**
 Takes in / or generates a sudoku puzzel, then shows how to solve the puzzel
-- Todo:
-	- make it faster
 */
 class Sudoku : ObservableObject {
 	@Published var board: [[SudokuCell]]
@@ -65,7 +67,9 @@ class Sudoku : ObservableObject {
 		}
 	}
 	@Published var lastMove: String = "No Last Move"
+	
 	var currentColor: Color = .black
+	
 	var isSolved: Bool {
 		get {
 			for row in 0..<self.board.count {
@@ -78,6 +82,7 @@ class Sudoku : ObservableObject {
 			return true
 		}
 	}
+	
 	var isValid: Bool {
 		get {
 			for row in 0..<self.board.count {
@@ -91,6 +96,7 @@ class Sudoku : ObservableObject {
 			return true
 		}
 	}
+	
 	var didChange: Bool {
 		get {
 			for row in 0..<self.board.count {
@@ -111,8 +117,9 @@ class Sudoku : ObservableObject {
 	init() {
 		board = [[SudokuCell]]()
 		
-		gererate(difficulty: .Easy, given: 60)
+		wipeBoard()
 	}
+	
 	init(board: [[SudokuCell]]) {
 		self.board = [[SudokuCell]]()
 		
@@ -136,12 +143,15 @@ class Sudoku : ObservableObject {
 		
 	//MARK: - Save
 	var saveState: [[[SudokuCell]]] = [[[SudokuCell]]]()
+	
 	func save() {
 		saveState.append(self.board)
 	}
+	
 	func wipeSave() {
 		saveState = [[[SudokuCell]]]()
 	}
+	
 	func restoreBoard() {
 		if let lastSave = saveState.last  {
 			board = lastSave
@@ -186,7 +196,7 @@ class Sudoku : ObservableObject {
 			hideNotes = false
 		}
 		
-		currentColor = .blue
+		setGameModeToPlay()
 		lastMove = "No Last Move"
 	}
 	
@@ -200,7 +210,7 @@ class Sudoku : ObservableObject {
 			
 			board.append(row)
 		}
-		currentColor = .black
+		setGameModeToCreate()
 	}
 	
 	//MARK: - Generate
@@ -216,7 +226,7 @@ class Sudoku : ObservableObject {
 	func gererate(difficulty: Difficulty, given: Int) {
 		wipeBoard()
 		
-		currentColor = .black
+		setGameModeToCreate()
 		solve()
 		
 		for _ in 0..<given {
@@ -244,12 +254,27 @@ class Sudoku : ObservableObject {
 		}
 		
 		save()
+		setGameModeToPlay()
+	}
+	
+	//MARK: - Game Modes
+	func setGameModeToCreate() {
+		currentColor = .black
+	}
+	
+	func setGameModeToPlay() {
 		currentColor = .blue
 	}
 	
+	func setGameModeToBingo() {
+		currentColor = .red
+	}
+	
+	
+	
 	//MARK: - Solve
 	func solve() {
-		currentColor = .blue
+		setGameModeToPlay()
 		while !isSolved {
 			stepSolve()
 		}
@@ -1004,7 +1029,7 @@ class Sudoku : ObservableObject {
 			let randomIndex: Int = Int.random(in: 0..<self.board[cell.0][cell.1].pos.count)
 			let changeTo: Int = self.board[cell.0][cell.1].pos[randomIndex]
 			save()
-			currentColor = .red
+			setGameModeToBingo()
 			setCell(row: cell.0, col: cell.1, to: changeTo)
 			
 			bowmansCells.append((cell.0, cell.1, changeTo))
@@ -1017,7 +1042,7 @@ class Sudoku : ObservableObject {
 			board[lastSave.0][lastSave.1].pos.removeAll(where: {$0 == lastSave.2})
 			bowmansCells.removeLast()
 			if(bowmansCells.count == 0) {
-				currentColor = .blue
+				setGameModeToPlay()
 			}
 		}
 		

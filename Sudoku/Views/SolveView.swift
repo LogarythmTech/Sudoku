@@ -1,14 +1,14 @@
 //
-//  ContentView.swift
+//  SolveView.swift
 //  Sudoku
 //
-//  Created by Logan Richards on 11/29/19.
-//  Copyright © 2019 ZER0 Tech. All rights reserved.
+//  Created by Logan Richards on 8/30/20.
+//  Copyright © 2020 ZER0 Tech. All rights reserved.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct SolveView: View {
 	@ObservedObject var sud: Sudoku = Sudoku()
 	@State var selectedCell: (row: Int, col: Int, group: Int)? = nil
 	@State var fillNotes: Bool = false
@@ -31,87 +31,72 @@ struct ContentView: View {
 			}.padding(.leading).padding(.trailing)
 			
 			Text("Move: \(self.sud.lastMove)")
-						
-						HStack {
-							Button(action: {
-								self.fillNotes = !self.fillNotes
-							}) {
-								Text(self.sud.hideNotes ? "Notes Off" : "Notes On")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-							
-							Button(action: {
-								self.sud.hideNotes = !self.sud.hideNotes
-							}) {
-								Text(self.sud.hideNotes ? "Show Notes" : "Hide Notes")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-							
-							Button(action: {
-								//self.sud.gererate(difficulty: .Medium, given: 100)
-							}) {
-								Text("Check")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-							
-							Button(action: {
-								self.sud.solve()
-							}) {
-								Text("Solve")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-							
-							Button(action: {
-								self.sud.stepSolve()
-							}) {
-								Text("Step Solve")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-
-							Button(action: {
-								self.sud.resetBoard()
-							}) {
-								Text("Reset")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-							
-							Button(action: {
-								self.sud.gererate(difficulty: .Medium, given: 100)
-							}) {
-								Text("Generate")
-									.padding()
-									.background(Color.blue)
-									.foregroundColor(.white)
-									.font(.body)
-									.cornerRadius(5)
-							}
-						}
-		}
-    }
+			
+			HStack {
+				Button(action: {
+					self.fillNotes = !self.fillNotes
+				}) {
+					Text(self.sud.hideNotes ? "Notes Off" : "Notes On")
+						.padding()
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
+				
+				Button(action: {
+					self.sud.hideNotes = !self.sud.hideNotes
+				}) {
+					Text(self.sud.hideNotes ? "Show Notes" : "Hide Notes")
+						.padding()
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
+			}
+			
+			HStack {
+				Button(action: {
+					//self.sud.gererate(difficulty: .Medium, given: 100)
+				}) {
+					Text("Check")
+						.padding()
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
+				
+				Button(action: {
+					self.sud.solve()
+				}) {
+					Text("Solve")
+						.padding()
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
+				
+			}
+			
+			HStack {
+				Button(action: {
+					self.sud.stepSolve()
+				}) {
+					Text("Step Solve")
+						.padding()
+						.background(Color.blue)
+						.foregroundColor(.white)
+						.font(.body)
+						.cornerRadius(5)
+				}
+			}
+			
+			Spacer()
+		}.onAppear(perform: {self.sud.setGameModeToPlay()})
+	}
 }
 
 struct numberButtonView : View {
@@ -164,8 +149,8 @@ struct numberButtonView : View {
 	}
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct SolveView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SolveView()
     }
 }

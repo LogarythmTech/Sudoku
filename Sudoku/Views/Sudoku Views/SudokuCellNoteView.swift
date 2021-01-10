@@ -31,14 +31,16 @@ struct HelperSudokuCellNoteView: View {
 	let frame: CGSize
 	
 	var body: some View {
-		if(self.show) {
-			Text(String(self.number))
-				.font(.system(size: 500))
-				.minimumScaleFactor(0.01)
-				.foregroundColor(.black)
-				.frame(width: self.frame.width/27, height: self.frame.height/27)
-		} else {
+		ZStack {
 			Spacer().frame(width: self.frame.width/27, height: self.frame.height/27)
+			
+			if(self.show) {
+				Text(String(self.number))
+					.font(.system(size: 500))
+					.minimumScaleFactor(0.01)
+					.foregroundColor(.black)
+					.frame(width: self.frame.width/27, height: self.frame.height/27)
+			}
 		}
 	}
 }
