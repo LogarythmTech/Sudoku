@@ -135,25 +135,24 @@ final class ScannerViewController: UIViewController {
 	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		updateCutout()
+		self.updateCutout()
 	}
 	
 	//MARK: - Setup
 	
 	func calculateRegionOfInterest() {
-		//In landscape orientation the desired ROI is specified as the ratio of buffer width to height. When the UI is rotated to portrait, keep the vertical size the same (in buffer pixels). Also try to keep the horizontal size the same up to a maximun ratio.
+		//In landscape orientation the desired ROI is specified as the ratio of buffer width to height. When the UI is rotated to portrait, keep the vertical size the same (in buffer pixels). Also try to keep the horizontal size the same up to a maximum ratio.
 		let desiredHeightRatio = 0.4
 		let desiredWidthRatio = 0.6
 		let maxPortraitWidth = 0.8
 		
-		//Figure out size of ROI
+		//Figure out size of ROI.
 		let size: CGSize
-		if(currentOrientation.isPortrait || self.currentOrientation == .unknown) {
+		if(self.currentOrientation.isPortrait || self.currentOrientation == .unknown) {
 			size = CGSize(width: min(desiredWidthRatio * self.bufferAspectRatio, maxPortraitWidth), height: desiredHeightRatio / self.bufferAspectRatio)
 		} else {
 			size = CGSize(width: desiredWidthRatio, height: desiredHeightRatio)
 		}
-		
 		//Make it centered.
 		self.regionOfInterest.origin = CGPoint(x: (1 - size.width) / 2, y: (1 - size.height) / 2)
 		self.regionOfInterest.size = size
@@ -163,14 +162,13 @@ final class ScannerViewController: UIViewController {
 		
 		//Update the cutout to match the new ROI.
 		DispatchQueue.main.async {
-			//Wait for the next run cycle before updating the cutout. This ensures that the preview layer has its new orientation.
+			//Wait for the next run cycle before updating the cutout. This ensures that the preview layer already has its new orientation.
 			self.updateCutout()
 		}
-		
 	}
 	
 	func updateCutout() {
-		//Figure out where the cutout endsup in layer coordinates.
+		//Figure out where the cutout ends up in layer coordinates.
 		let roiRectTransform = self.bottomToTopTransform.concatenating(self.uiRotationTransform)
 		let cutout = self.previewView.videoPreviewLayer.layerRectConverted(fromMetadataOutputRect: self.regionOfInterest.applying(roiRectTransform))
 		
@@ -185,15 +183,14 @@ final class ScannerViewController: UIViewController {
 		self.numberView.frame = numFrame
 	}
 	
-	
 	func setupOrientationAndTransform() {
 		//Recalculate the affine transform between Vision coordinates and AVF coordinates.
 		
-		//Compensate for region of interest
+		//Compensate for region of interest.
 		let roi = self.regionOfInterest
 		self.roiToGlobalTransform = CGAffineTransform(translationX: roi.origin.x, y: roi.origin.y).scaledBy(x: roi.width, y: roi.height)
 		
-		//Compensate for orientation (bufferes always come in the same orientation).
+		//Compensate for orientation (buffers always come in the same orientation).
 		switch self.currentOrientation {
 		case .landscapeLeft:
 			self.textOrientation = CGImagePropertyOrientation.up
@@ -203,13 +200,13 @@ final class ScannerViewController: UIViewController {
 			self.uiRotationTransform = CGAffineTransform(translationX: 1, y: 1).rotated(by: CGFloat.pi)
 		case .portraitUpsideDown:
 			self.textOrientation = CGImagePropertyOrientation.left
-			self.uiRotationTransform = CGAffineTransform(translationX: 1, y: 1).rotated(by: CGFloat.pi / 2)
-		default: //We default everything elese to .portraitUp
+			self.uiRotationTransform = CGAffineTransform(translationX: 1, y: 0).rotated(by: CGFloat.pi / 2)
+		default: // We default everything else to .portraitUp
 			self.textOrientation = CGImagePropertyOrientation.right
-			self.uiRotationTransform = CGAffineTransform(translationX: 1, y: 1).rotated(by: -CGFloat.pi / 2)
+			self.uiRotationTransform = CGAffineTransform(translationX: 0, y: 1).rotated(by: -CGFloat.pi / 2)
 		}
 		
-		//Full Vision ROI to AVF transform.
+		// Full Vision ROI to AVF transform.
 		self.visionToAVFTransform = self.roiToGlobalTransform.concatenating(self.bottomToTopTransform).concatenating(self.uiRotationTransform)
 	}
 	
@@ -218,11 +215,10 @@ final class ScannerViewController: UIViewController {
 			print("Could not create capture device.")
 			return
 		}
-		
 		self.captureDevice = captureDevice
 		
 		//NOTE: Requesting 4k buffers allows recognition of smaller text but will consume more power. Use the smallest buffer size necessary to keep down battery usage.
-		if captureDevice.supportsSessionPreset(.hd4K3840x2160) {
+		if(captureDevice.supportsSessionPreset(.hd4K3840x2160)) {
 			self.captureSession.sessionPreset = AVCaptureSession.Preset.hd4K3840x2160
 			self.bufferAspectRatio = 3840.0 / 2160.0
 		} else {
@@ -235,18 +231,17 @@ final class ScannerViewController: UIViewController {
 			return
 		}
 		
-		if self.captureSession.canAddInput(deviceInput) {
+		if(self.captureSession.canAddInput(deviceInput)) {
 			self.captureSession.addInput(deviceInput)
 		}
 		
-		//Configure video data output.
+		// Configure video data output.
 		self.videoDataOutput.alwaysDiscardsLateVideoFrames = true
 		self.videoDataOutput.setSampleBufferDelegate(self, queue: self.videoDataOutputQueue)
-		self.videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String : kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
+		self.videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange]
 		
-		if self.captureSession.canAddOutput(self.videoDataOutput) {
+		if(self.captureSession.canAddOutput(self.videoDataOutput)) {
 			self.captureSession.addOutput(self.videoDataOutput)
-			
 			//NOTE: There is a trade-off to be made here. Enabling stabilization will give temporally more stable results and should help the recognizer converge. But if it's enabled the VideoDataOutput buffers don't match what's displayed on screen, which makes drawing bounding boxes very hard. Disable it in this app to allow drawing detected bounding boxes on screen.
 			self.videoDataOutput.connection(with: AVMediaType.video)?.preferredVideoStabilizationMode = .off
 		} else {
@@ -265,10 +260,10 @@ final class ScannerViewController: UIViewController {
 			return
 		}
 		
-		captureSession.startRunning()
+		self.captureSession.startRunning()
 	}
 	
-	//MARK: - UI drawing and interation
+	// MARK: - UI drawing and interaction
 	
 	func showString(string: String) {
 		//Found a definite number.
@@ -288,7 +283,6 @@ final class ScannerViewController: UIViewController {
 			if(!self.captureSession.isRunning) {
 				self.captureSession.startRunning()
 			}
-			
 			DispatchQueue.main.async {
 				self.numberView.isHidden = true
 			}
@@ -310,7 +304,7 @@ extension ScannerViewController : AVCaptureVideoDataOutputSampleBufferDelegate {
 //MARK: - Utility extensions
 
 extension AVCaptureVideoOrientation {
-	public init?(deviceOrientation: UIDeviceOrientation) {
+	init?(deviceOrientation: UIDeviceOrientation) {
 		switch deviceOrientation {
 		case .portrait: self = .portrait
 		case .portraitUpsideDown: self = .portraitUpsideDown
