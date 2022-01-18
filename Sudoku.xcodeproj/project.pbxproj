@@ -17,6 +17,11 @@
 		D13978752796457800CBCCC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139784B2796457800CBCCC7 /* ContentView.swift */; };
 		D13978762796457800CBCCC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D139784C2796457800CBCCC7 /* Assets.xcassets */; };
 		D13978772796457800CBCCC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D139784C2796457800CBCCC7 /* Assets.xcassets */; };
+		D13978882796468A00CBCCC7 /* Sudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978872796468A00CBCCC7 /* Sudoku.swift */; };
+		D139788A279646E900CBCCC7 /* Sudoku+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1397889279646E900CBCCC7 /* Sudoku+Cell.swift */; };
+		D139788C2796474A00CBCCC7 /* Sudoku+HumanSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */; };
+		D139788E2796476600CBCCC7 /* Sudoku+ComputerSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */; };
+		D13978902796477500CBCCC7 /* Sudoku+Generate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +54,11 @@
 		D139786A2796457800CBCCC7 /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D139786E2796457800CBCCC7 /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		D13978702796457800CBCCC7 /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
+		D13978872796468A00CBCCC7 /* Sudoku.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sudoku.swift; sourceTree = "<group>"; };
+		D1397889279646E900CBCCC7 /* Sudoku+Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+Cell.swift"; sourceTree = "<group>"; };
+		D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+HumanSolve.swift"; sourceTree = "<group>"; };
+		D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+ComputerSolve.swift"; sourceTree = "<group>"; };
+		D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+Generate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +107,7 @@
 		D13978492796457800CBCCC7 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				D13978862796467E00CBCCC7 /* Sudoku */,
 				D139784A2796457800CBCCC7 /* SudokuApp.swift */,
 				D139784B2796457800CBCCC7 /* ContentView.swift */,
 				D139784C2796457800CBCCC7 /* Assets.xcassets */,
@@ -139,6 +150,18 @@
 				D13978702796457800CBCCC7 /* Tests_macOSLaunchTests.swift */,
 			);
 			path = "Tests macOS";
+			sourceTree = "<group>";
+		};
+		D13978862796467E00CBCCC7 /* Sudoku */ = {
+			isa = PBXGroup;
+			children = (
+				D13978872796468A00CBCCC7 /* Sudoku.swift */,
+				D1397889279646E900CBCCC7 /* Sudoku+Cell.swift */,
+				D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */,
+				D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */,
+				D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */,
+			);
+			path = Sudoku;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,6 +324,11 @@
 			files = (
 				D13978742796457800CBCCC7 /* ContentView.swift in Sources */,
 				D13978722796457800CBCCC7 /* SudokuApp.swift in Sources */,
+				D139788A279646E900CBCCC7 /* Sudoku+Cell.swift in Sources */,
+				D139788C2796474A00CBCCC7 /* Sudoku+HumanSolve.swift in Sources */,
+				D13978882796468A00CBCCC7 /* Sudoku.swift in Sources */,
+				D13978902796477500CBCCC7 /* Sudoku+Generate.swift in Sources */,
+				D139788E2796476600CBCCC7 /* Sudoku+ComputerSolve.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
