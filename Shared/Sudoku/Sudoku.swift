@@ -21,8 +21,8 @@ public class Sudoku: ObservableObject {
     }
     
     @Published private var cells: [[Cell]]
-    
-    var hideNotes: Bool = false
+    @Published var hideNotes: Bool = false
+    @Published var selectedCell: CellPosition?
     
     //MARK: - Initializers
     convenience init() {
@@ -84,19 +84,25 @@ public class Sudoku: ObservableObject {
     }
     
     //MARK: - Subscript
-    subscript(row: Int, col: Int) -> Cell {
+    subscript(pos: CellPosition) -> Cell {
         get {
-            return cells[row][col]
+            return cells[pos.row][pos.column]
         }
         set(newValue) {
-            if let setValue = newValue.value {
-                //TODO: For all cells in the same row, col, or group, remove `newValue.value` from possible values
-                if(setValue > 0 && setValue < self.size) {
-                    self.cells[row][col] = newValue
-                }
+            if(newValue.value != cells[pos.row][pos.column].value) {
+                setCellValue(to: newValue.value, for: pos)
             } else {
-                self.cells[row][col] = newValue
+                self.cells[pos.row][pos.column] = newValue
             }
+        }
+    }
+    
+    subscript(row: Int, col: Int) -> Cell {
+        get {
+            return self[CellPosition(row: row, column: col, n: n, m: m)]
+        }
+        set(newValue) {
+            self[CellPosition(row: row, column: col, n: n, m: m)] = newValue
         }
     }
     
@@ -151,8 +157,76 @@ public class Sudoku: ObservableObject {
     }
     
     //MARK: - Setters
+    private func setCellValue(to value: Int?, for pos: CellPosition) {
+        if let value = value {
+            if(value > 0 && value <= size) {
+                self.cells[pos.row][pos.column].value = value
+                
+                for i in 0..<size {
+                    if(i != pos.row) {
+                        self.cells[i][pos.column].removePossibleValue(value)
+                    }
+                    
+                    if(i != pos.column) {
+                        self.cells[pos.row][i].removePossibleValue(value)
+                    }
+                    
+                    if(pos.groupIndex != i) {
+                        let groupPos = CellPosition(group: pos.group, groupIndex: i, n: n, m: m)
+                        self.cells[groupPos.row][groupPos.column].removePossibleValue(value)
+                    }
+                }
+                
+                printCells()
+            }
+        } else {
+            self.cells[pos.row][pos.column].value = nil
+        }
+    }
+    
+    func setSelectedCell(to row: Int, col: Int) {
+        var pos: CellPosition? = nil
+        
+        if(row >= 0 && row < size && col >= 0 && col < size) {
+            pos = CellPosition(row: row, column: col, n: n, m: m)
+        }
+        
+        setSelectedCell(to: pos)
+    }
+    
+    func setSelectedCell(to pos: CellPosition?) {
+        resetHighlights()
+        
+        if let pos = pos {
+            for i in 0..<size {
+                self[pos.row, i].highlightColor = .secondaryHighlight
+                self[i, pos.column].highlightColor = .secondaryHighlight
+                
+                let groupPos: CellPosition = CellPosition(group: pos.group, groupIndex: i, n: n, m: m)
+                self[groupPos].highlightColor = .secondaryHighlight
+            }
+            
+            self[pos].highlightColor = .primaryHighlight
+        }
+        
+        self.selectedCell = pos
+    }
+    
+    func setValueForSelectedCell(to value: Int) {
+        if let selectedCell = selectedCell {
+            self[selectedCell].value = value
+        }
+    }
     
     //MARK: Reseters
+    func resetHighlights() {
+        for row in 0..<size {
+            for col in 0..<size {
+                self[row, col].highlightColor = .noHighlight
+            }
+        }
+    }
+    
     func resetBoard() {
         for (rowIndex, row) in cells.enumerated() {
             for (index, _) in row.enumerated() {

@@ -16,7 +16,10 @@ struct SudokuBoardView: View {
                 ForEach(0..<sudoku.size) { row in
                     HStack(spacing: 0) {
                         ForEach(0..<sudoku.size) { col in
-                            SudokuCellView(row: row, col: col, frame: CGSize(width: min(geometry.size.width, geometry.size.height), height: min(geometry.size.width, geometry.size.height))).environmentObject(sudoku)
+                            Button {
+                                sudoku.setSelectedCell(to: row, col: col)
+                            } label: {
+                                SudokuCellView(row: row, col: col, frame: CGSize(width: min(geometry.size.width, geometry.size.height), height: min(geometry.size.width, geometry.size.height)))                            }
                         }
                     }
                 }

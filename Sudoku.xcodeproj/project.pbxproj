@@ -13,6 +13,25 @@
 		D1291EDD279917E0003371A5 /* View+CellBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EDC279917E0003371A5 /* View+CellBackground.swift */; };
 		D1291EDF27991A97003371A5 /* Text+CellTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EDE27991A97003371A5 /* Text+CellTextColor.swift */; };
 		D1291EE127992753003371A5 /* Sudoku+CellPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */; };
+		D1291EE3279A0D0D003371A5 /* ValueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EE2279A0D0C003371A5 /* ValueButtonView.swift */; };
+		D1291EE7279A1842003371A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139784B2796457800CBCCC7 /* ContentView.swift */; };
+		D1291EE8279A1842003371A5 /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F027964B9100CBCCC7 /* SudokuView.swift */; };
+		D1291EE9279A1842003371A5 /* ValueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EE2279A0D0C003371A5 /* ValueButtonView.swift */; };
+		D1291EEA279A1845003371A5 /* SudokuBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F92799148800CBCCC7 /* SudokuBoardView.swift */; };
+		D1291EEB279A1845003371A5 /* SudokuCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F227964C2000CBCCC7 /* SudokuCellView.swift */; };
+		D1291EEC279A1845003371A5 /* SudokuCellNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F72798E3F600CBCCC7 /* SudokuCellNoteView.swift */; };
+		D1291EED279A1848003371A5 /* Text+CellTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EDE27991A97003371A5 /* Text+CellTextColor.swift */; };
+		D1291EEE279A1848003371A5 /* View+Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291ED727991765003371A5 /* View+Border.swift */; };
+		D1291EEF279A1848003371A5 /* View+SudokuBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291ED927991771003371A5 /* View+SudokuBorder.swift */; };
+		D1291EF0279A1848003371A5 /* View+CellBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EDC279917E0003371A5 /* View+CellBackground.swift */; };
+		D1291EF1279A184B003371A5 /* EdgeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F427964D4300CBCCC7 /* EdgeBorder.swift */; };
+		D1291EF2279A184E003371A5 /* Sudoku+Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1397889279646E900CBCCC7 /* Sudoku+Cell.swift */; };
+		D1291EF3279A184E003371A5 /* Sudoku+HumanSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */; };
+		D1291EF4279A184E003371A5 /* Sudoku+CellPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */; };
+		D1291EF5279A184E003371A5 /* Sudoku+Generate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */; };
+		D1291EF6279A184E003371A5 /* Sudoku+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291ED52799165C003371A5 /* Sudoku+Color.swift */; };
+		D1291EF7279A184E003371A5 /* Sudoku+ComputerSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */; };
+		D1291EF8279A184E003371A5 /* Sudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978872796468A00CBCCC7 /* Sudoku.swift */; };
 		D13978632796457800CBCCC7 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978622796457800CBCCC7 /* Tests_iOS.swift */; };
 		D13978652796457800CBCCC7 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978642796457800CBCCC7 /* Tests_iOSLaunchTests.swift */; };
 		D139786F2796457800CBCCC7 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139786E2796457800CBCCC7 /* Tests_macOS.swift */; };
@@ -20,7 +39,6 @@
 		D13978722796457800CBCCC7 /* SudokuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139784A2796457800CBCCC7 /* SudokuApp.swift */; };
 		D13978732796457800CBCCC7 /* SudokuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139784A2796457800CBCCC7 /* SudokuApp.swift */; };
 		D13978742796457800CBCCC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139784B2796457800CBCCC7 /* ContentView.swift */; };
-		D13978752796457800CBCCC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139784B2796457800CBCCC7 /* ContentView.swift */; };
 		D13978762796457800CBCCC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D139784C2796457800CBCCC7 /* Assets.xcassets */; };
 		D13978772796457800CBCCC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D139784C2796457800CBCCC7 /* Assets.xcassets */; };
 		D13978882796468A00CBCCC7 /* Sudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978872796468A00CBCCC7 /* Sudoku.swift */; };
@@ -59,6 +77,7 @@
 		D1291EDC279917E0003371A5 /* View+CellBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+CellBackground.swift"; sourceTree = "<group>"; };
 		D1291EDE27991A97003371A5 /* Text+CellTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+CellTextColor.swift"; sourceTree = "<group>"; };
 		D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+CellPosition.swift"; sourceTree = "<group>"; };
+		D1291EE2279A0D0C003371A5 /* ValueButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueButtonView.swift; sourceTree = "<group>"; };
 		D139784A2796457800CBCCC7 /* SudokuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuApp.swift; sourceTree = "<group>"; };
 		D139784B2796457800CBCCC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D139784C2796457800CBCCC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -204,21 +223,22 @@
 			isa = PBXGroup;
 			children = (
 				D139784B2796457800CBCCC7 /* ContentView.swift */,
-				D13978EF27964B7B00CBCCC7 /* Sudoku */,
+				D13978F027964B9100CBCCC7 /* SudokuView.swift */,
+				D1291EE2279A0D0C003371A5 /* ValueButtonView.swift */,
+				D13978EF27964B7B00CBCCC7 /* Board */,
 				D1291EDB2799179D003371A5 /* Extensions */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		D13978EF27964B7B00CBCCC7 /* Sudoku */ = {
+		D13978EF27964B7B00CBCCC7 /* Board */ = {
 			isa = PBXGroup;
 			children = (
-				D13978F027964B9100CBCCC7 /* SudokuView.swift */,
 				D13978F92799148800CBCCC7 /* SudokuBoardView.swift */,
 				D13978F227964C2000CBCCC7 /* SudokuCellView.swift */,
 				D13978F72798E3F600CBCCC7 /* SudokuCellNoteView.swift */,
 			);
-			path = Sudoku;
+			path = Board;
 			sourceTree = "<group>";
 		};
 		D13978F627964D4700CBCCC7 /* Shapes */ = {
@@ -391,6 +411,7 @@
 				D1291EDA27991771003371A5 /* View+SudokuBorder.swift in Sources */,
 				D13978742796457800CBCCC7 /* ContentView.swift in Sources */,
 				D13978F127964B9100CBCCC7 /* SudokuView.swift in Sources */,
+				D1291EE3279A0D0D003371A5 /* ValueButtonView.swift in Sources */,
 				D13978FA2799148800CBCCC7 /* SudokuBoardView.swift in Sources */,
 				D13978722796457800CBCCC7 /* SudokuApp.swift in Sources */,
 				D139788A279646E900CBCCC7 /* Sudoku+Cell.swift in Sources */,
@@ -412,8 +433,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D13978752796457800CBCCC7 /* ContentView.swift in Sources */,
+				D1291EF3279A184E003371A5 /* Sudoku+HumanSolve.swift in Sources */,
+				D1291EF5279A184E003371A5 /* Sudoku+Generate.swift in Sources */,
+				D1291EF0279A1848003371A5 /* View+CellBackground.swift in Sources */,
+				D1291EF4279A184E003371A5 /* Sudoku+CellPosition.swift in Sources */,
+				D1291EEC279A1845003371A5 /* SudokuCellNoteView.swift in Sources */,
+				D1291EF7279A184E003371A5 /* Sudoku+ComputerSolve.swift in Sources */,
+				D1291EEF279A1848003371A5 /* View+SudokuBorder.swift in Sources */,
+				D1291EF6279A184E003371A5 /* Sudoku+Color.swift in Sources */,
+				D1291EE9279A1842003371A5 /* ValueButtonView.swift in Sources */,
+				D1291EF8279A184E003371A5 /* Sudoku.swift in Sources */,
+				D1291EEB279A1845003371A5 /* SudokuCellView.swift in Sources */,
+				D1291EE8279A1842003371A5 /* SudokuView.swift in Sources */,
+				D1291EF2279A184E003371A5 /* Sudoku+Cell.swift in Sources */,
+				D1291EE7279A1842003371A5 /* ContentView.swift in Sources */,
+				D1291EEA279A1845003371A5 /* SudokuBoardView.swift in Sources */,
 				D13978732796457800CBCCC7 /* SudokuApp.swift in Sources */,
+				D1291EEE279A1848003371A5 /* View+Border.swift in Sources */,
+				D1291EF1279A184B003371A5 /* EdgeBorder.swift in Sources */,
+				D1291EED279A1848003371A5 /* Text+CellTextColor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

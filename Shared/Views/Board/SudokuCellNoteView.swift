@@ -23,8 +23,8 @@ struct SudokuCellNoteView: View {
                             if(sudoku[row, col].possibleValues.contains(number)) {
                                 Text(String(number))
                                     .font(.system(size: 500))
+                                    .cellTextColor(.initalForeground)
                                     .minimumScaleFactor(0.01)
-                                    //.cellTextColor(.initalForeground)
                             } else {
                                 Spacer()
                             }
