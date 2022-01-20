@@ -31,12 +31,6 @@ extension Sudoku {
     //MARK: Unique Candidate
     /// If in a row, column, or group there is a playable number (1-9 in a standard 9x9 board) such that it can only be put in a single cell (of the row, column, or group), then that number is guaranteed to fit there.
     func solveUniqueCandidate() -> CellPosition? {
-        let row = 0
-        
-        if(self.getValuesFor(row: row).count != size) {
-            
-        }
-        
         for row in 0..<self.size {
             for col in 0..<self.size {
                 if let position = solveUniqueCandidate(for: self[row, col]) {
@@ -86,7 +80,16 @@ extension Sudoku {
         //Check Group
         values = cell.possibleValues
         
-        
+        for index in 0..<self.size {
+            let pos = CellPosition(group: cell.position.group, groupIndex: index, n: self.n, m: self.m)
+            
+            if(cell.position != pos) {
+                values.removeAll { value in
+                    self[pos.row, pos.column].possibleValues.contains(value)
+                }
+            }
+            
+        }
         
         if(values.count == 1) {
             self[cell.position.row, cell.position.column].value = values.first ?? 0

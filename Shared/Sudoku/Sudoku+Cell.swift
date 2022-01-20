@@ -40,8 +40,6 @@ extension Sudoku {
             self.autoValue = autoValue
             self.position = CellPosition(row: row, column: column, n: n, m: m)
             
-            self.value = (position.groupIndex / n) + ((position.group / m) * m)
-            
             for i in 1...(n*m) {
                 self.possibleValues.append(i)
             }

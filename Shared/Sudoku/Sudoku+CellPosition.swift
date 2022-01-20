@@ -8,7 +8,7 @@
 import Foundation
 
 extension Sudoku {
-    struct CellPosition {
+    struct CellPosition: Equatable {
         let row: Int
         let column: Int
         let group: Int
@@ -35,6 +35,10 @@ extension Sudoku {
             self.m = m
             self.row = (groupIndex / n) + ((group / m) * m)
             self.column = (groupIndex % n) + ((group % m) * n)
+        }
+        
+        public static func ==(left: CellPosition, right: CellPosition) -> Bool {
+            return left.row == right.row && left.column == right.column && left.group == right.group
         }
     }
 }
