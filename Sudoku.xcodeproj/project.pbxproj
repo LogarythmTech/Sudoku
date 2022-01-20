@@ -12,6 +12,7 @@
 		D1291EDA27991771003371A5 /* View+SudokuBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291ED927991771003371A5 /* View+SudokuBorder.swift */; };
 		D1291EDD279917E0003371A5 /* View+CellBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EDC279917E0003371A5 /* View+CellBackground.swift */; };
 		D1291EDF27991A97003371A5 /* Text+CellTextColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EDE27991A97003371A5 /* Text+CellTextColor.swift */; };
+		D1291EE127992753003371A5 /* Sudoku+CellPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */; };
 		D13978632796457800CBCCC7 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978622796457800CBCCC7 /* Tests_iOS.swift */; };
 		D13978652796457800CBCCC7 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978642796457800CBCCC7 /* Tests_iOSLaunchTests.swift */; };
 		D139786F2796457800CBCCC7 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139786E2796457800CBCCC7 /* Tests_macOS.swift */; };
@@ -57,6 +58,7 @@
 		D1291ED927991771003371A5 /* View+SudokuBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+SudokuBorder.swift"; sourceTree = "<group>"; };
 		D1291EDC279917E0003371A5 /* View+CellBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+CellBackground.swift"; sourceTree = "<group>"; };
 		D1291EDE27991A97003371A5 /* Text+CellTextColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+CellTextColor.swift"; sourceTree = "<group>"; };
+		D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+CellPosition.swift"; sourceTree = "<group>"; };
 		D139784A2796457800CBCCC7 /* SudokuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuApp.swift; sourceTree = "<group>"; };
 		D139784B2796457800CBCCC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D139784C2796457800CBCCC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 			children = (
 				D13978872796468A00CBCCC7 /* Sudoku.swift */,
 				D1291ED52799165C003371A5 /* Sudoku+Color.swift */,
+				D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */,
 				D1397889279646E900CBCCC7 /* Sudoku+Cell.swift */,
 				D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */,
 				D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */,
@@ -401,6 +404,7 @@
 				D1291EDD279917E0003371A5 /* View+CellBackground.swift in Sources */,
 				D13978F327964C2000CBCCC7 /* SudokuCellView.swift in Sources */,
 				D139788E2796476600CBCCC7 /* Sudoku+ComputerSolve.swift in Sources */,
+				D1291EE127992753003371A5 /* Sudoku+CellPosition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

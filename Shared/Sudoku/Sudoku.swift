@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// The Class that contains a sudoku baord. Can play, solve, and generate.
 public class Sudoku: ObservableObject {
     /// The Number of Columns in one Group.
     let n: Int
@@ -35,14 +36,31 @@ public class Sudoku: ObservableObject {
     init(n: Int, m: Int) {
         self.n = n
         self.m = m
-        self.cells = Array(repeating: Array(repeating: Cell(n: n, m: m), count: n*m), count: n*m)
+        self.cells = [[Cell]]()
+        
+        for row in 0..<(n*m) {
+            self.cells.append([Cell]())
+            
+            for col in 0..<(n*m) {
+                self.cells[row].append(Cell(n: n, m: m, row: row, column: col))
+            }
+        }
+                                        
         self.printCells()
     }
     
     init?(n: Int, m: Int, cells: [[Int?]]) {
         self.n = n
         self.m = m
-        self.cells = Array(repeating: Array(repeating: Cell(n: n, m: m), count: n*m), count: n*m)
+        self.cells = [[Cell]]()
+        
+        for row in 0..<(n*m) {
+            self.cells.append([Cell]())
+            
+            for col in 0..<(n*m) {
+                self.cells[row].append(Cell(n: n, m: m, row: row, column: col))
+            }
+        }
         
         if(cells.count != n*m) {
             return nil
@@ -54,10 +72,10 @@ public class Sudoku: ObservableObject {
             }
         }
         
-        for (rowIndex, row) in cells.enumerated() {
-            for (index, cell) in row.enumerated() {
-                if let value = cell {
-                    self.cells[rowIndex][index].setVaule(value)
+        for row in 0..<(n*m) {
+            for col in 0..<(n*m) {
+                if let value = cells[row][col] {
+                    self[row, col].value = value
                 }
             }
         }
@@ -72,6 +90,7 @@ public class Sudoku: ObservableObject {
         }
         set(newValue) {
             if let setValue = newValue.value {
+                //TODO: For all cells in the same row, col, or group, remove `newValue.value` from possible values
                 if(setValue > 0 && setValue < self.size) {
                     self.cells[row][col] = newValue
                 }
@@ -82,10 +101,12 @@ public class Sudoku: ObservableObject {
     }
     
     //MARK: - Getters
+    /// - Returns the `index` of the group starting from the top right at 0 going to the bottom left with size-1
     func getGroupIndex(row: Int, col: Int) -> Int {
         return (row / n) * n + col / m
     }
     
+    /// - Returns all the values (sorted) in a row that has been set.
     func getValuesFor(row: Int) -> [Int] {
         var values: [Int] = [Int]()
         
@@ -95,9 +116,10 @@ public class Sudoku: ObservableObject {
             }
         }
         
-        return values
+        return values.sorted()
     }
     
+    /// - Returns all the values (sorted) in a column that has been set.
     func getValuesFor(col: Int) -> [Int] {
         var values: [Int] = [Int]()
         
@@ -107,9 +129,10 @@ public class Sudoku: ObservableObject {
             }
         }
         
-        return values
+        return values.sorted()
     }
     
+    /// - Returns all the values (sorted) in a group that has been set.
     func getValuesFor(group: Int) -> [Int] {
         var values: [Int] = [Int]()
         
@@ -124,27 +147,16 @@ public class Sudoku: ObservableObject {
             }
         }
         
-        return values
+        return values.sorted()
     }
     
     //MARK: - Setters
-    public func setCell(row: Int, col: Int, to value: Int) {
-        if(value > 0 && value <= n*m) {
-            for i in 0..<n*m {
-                cells[row][i].removePossibleValue(value)
-                cells[i][col].removePossibleValue(value)
-                
-            }
-            
-            self.cells[row][col].setVaule(value)
-        }
-    }
     
     //MARK: Reseters
     func resetBoard() {
         for (rowIndex, row) in cells.enumerated() {
-            for (index, cell) in row.enumerated() {
-                self.cells[rowIndex][index].clear(n: n, m: m)
+            for (index, _) in row.enumerated() {
+                self[rowIndex, index].clear(n: n, m: m)
             }
         }
     }

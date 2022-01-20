@@ -20,6 +20,9 @@ extension Sudoku {
         /// All the possible values that the cell could be.
         var possibleValues: [Int]
         
+        /// The position (row, column, and group) of the cell
+        let position: CellPosition
+        
         /// The text color of the cell.
         /// Defualt. The initial text color should be black and the played text color should be blue. 
         var foregroundColor: CellColor = .initalForeground
@@ -29,9 +32,15 @@ extension Sudoku {
         
         /// - Parameter n: The number of columns in a group of the board.
         /// - Parameter m: The number of rows in a group of the board.
-        init(n: Int, m: Int, autoValue: Bool = false) {
+        /// - Parameter row: The row of the cell.
+        /// - Parameter column: The column of the cell.
+        /// - Parameter autoValue: If `true` and there is only one possible value, then set said value to last possible value.
+        init(n: Int, m: Int, row: Int, column: Int, autoValue: Bool = false) {
             self.possibleValues = [Int]()
             self.autoValue = autoValue
+            self.position = CellPosition(row: row, column: column, n: n, m: m)
+            
+            self.value = (position.groupIndex / n) + ((position.group / m) * m)
             
             for i in 1...(n*m) {
                 self.possibleValues.append(i)
