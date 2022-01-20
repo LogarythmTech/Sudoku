@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwiftUI
 
-public class Sudoku {
+public class Sudoku: ObservableObject {
     /// The Number of Columns in one Group.
     let n: Int
     /// The Number of Rows in one Group.
@@ -18,7 +19,9 @@ public class Sudoku {
         return n*m
     }
     
-    private var cells: [[Cell]]
+    var cells: [[Cell]]
+    
+    var hideNotes: Bool = false
     
     //MARK: - Initializers
     convenience init() {
@@ -63,6 +66,10 @@ public class Sudoku {
     }
     
     //MARK: - Getters
+    func getCells() -> [[Cell]] {
+        return cells
+    }
+    
     func getGroupIndex(row: Int, col: Int) -> Int {
         return (row / n) * n + col / m
     }

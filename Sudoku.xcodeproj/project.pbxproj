@@ -22,6 +22,10 @@
 		D139788C2796474A00CBCCC7 /* Sudoku+HumanSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */; };
 		D139788E2796476600CBCCC7 /* Sudoku+ComputerSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */; };
 		D13978902796477500CBCCC7 /* Sudoku+Generate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */; };
+		D13978F127964B9100CBCCC7 /* SudokuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F027964B9100CBCCC7 /* SudokuView.swift */; };
+		D13978F327964C2000CBCCC7 /* SudokuCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F227964C2000CBCCC7 /* SudokuCellView.swift */; };
+		D13978F527964D4300CBCCC7 /* EdgeBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F427964D4300CBCCC7 /* EdgeBorder.swift */; };
+		D13978F82798E3F600CBCCC7 /* SudokuCellNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978F72798E3F600CBCCC7 /* SudokuCellNoteView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +63,10 @@
 		D139788B2796474A00CBCCC7 /* Sudoku+HumanSolve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+HumanSolve.swift"; sourceTree = "<group>"; };
 		D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+ComputerSolve.swift"; sourceTree = "<group>"; };
 		D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+Generate.swift"; sourceTree = "<group>"; };
+		D13978F027964B9100CBCCC7 /* SudokuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuView.swift; sourceTree = "<group>"; };
+		D13978F227964C2000CBCCC7 /* SudokuCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuCellView.swift; sourceTree = "<group>"; };
+		D13978F427964D4300CBCCC7 /* EdgeBorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeBorder.swift; sourceTree = "<group>"; };
+		D13978F72798E3F600CBCCC7 /* SudokuCellNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuCellNoteView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,9 +115,10 @@
 		D13978492796457800CBCCC7 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				D13978862796467E00CBCCC7 /* Sudoku */,
 				D139784A2796457800CBCCC7 /* SudokuApp.swift */,
-				D139784B2796457800CBCCC7 /* ContentView.swift */,
+				D13978EE27964B7200CBCCC7 /* Views */,
+				D13978F627964D4700CBCCC7 /* Shapes */,
+				D13978862796467E00CBCCC7 /* Sudoku */,
 				D139784C2796457800CBCCC7 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -162,6 +171,33 @@
 				D139788F2796477500CBCCC7 /* Sudoku+Generate.swift */,
 			);
 			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		D13978EE27964B7200CBCCC7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D139784B2796457800CBCCC7 /* ContentView.swift */,
+				D13978EF27964B7B00CBCCC7 /* Sudoku */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D13978EF27964B7B00CBCCC7 /* Sudoku */ = {
+			isa = PBXGroup;
+			children = (
+				D13978F027964B9100CBCCC7 /* SudokuView.swift */,
+				D13978F227964C2000CBCCC7 /* SudokuCellView.swift */,
+				D13978F72798E3F600CBCCC7 /* SudokuCellNoteView.swift */,
+			);
+			path = Sudoku;
+			sourceTree = "<group>";
+		};
+		D13978F627964D4700CBCCC7 /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				D13978F427964D4300CBCCC7 /* EdgeBorder.swift */,
+			);
+			path = Shapes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -323,11 +359,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D13978742796457800CBCCC7 /* ContentView.swift in Sources */,
+				D13978F127964B9100CBCCC7 /* SudokuView.swift in Sources */,
 				D13978722796457800CBCCC7 /* SudokuApp.swift in Sources */,
 				D139788A279646E900CBCCC7 /* Sudoku+Cell.swift in Sources */,
+				D13978F527964D4300CBCCC7 /* EdgeBorder.swift in Sources */,
 				D139788C2796474A00CBCCC7 /* Sudoku+HumanSolve.swift in Sources */,
 				D13978882796468A00CBCCC7 /* Sudoku.swift in Sources */,
+				D13978F82798E3F600CBCCC7 /* SudokuCellNoteView.swift in Sources */,
 				D13978902796477500CBCCC7 /* Sudoku+Generate.swift in Sources */,
+				D13978F327964C2000CBCCC7 /* SudokuCellView.swift in Sources */,
 				D139788E2796476600CBCCC7 /* Sudoku+ComputerSolve.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
