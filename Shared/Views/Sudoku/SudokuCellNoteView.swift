@@ -18,12 +18,13 @@ struct SudokuCellNoteView: View {
             ForEach(0..<sudoku.m) { i in
                 HStack(spacing: 0) {
                     ForEach(0..<sudoku.n) { j in
-                        let number: Int = i*sudoku.m + j + 1
+                        let number: Int = i*sudoku.n + j + 1
                         Group {
-                            if(sudoku.cells[row][col].possibleValues.contains(number)) {
+                            if(sudoku[row, col].possibleValues.contains(number)) {
                                 Text(String(number))
-                                    .font(.system(size: 500, weight: .bold))
+                                    .font(.system(size: 500))
                                     .minimumScaleFactor(0.01)
+                                    //.cellTextColor(.initalForeground)
                             } else {
                                 Spacer()
                             }
@@ -38,6 +39,6 @@ struct SudokuCellNoteView: View {
 
 struct SudokuCellNoteView_Previews: PreviewProvider {
     static var previews: some View {
-        SudokuCellNoteView(row: 0, col: 0, frame: CGSize(width: 300, height: 300)).environmentObject(Sudoku(n: 3, m: 3))
+        SudokuCellNoteView(row: 0, col: 0, frame: CGSize(width: 300, height: 300)).environmentObject(Sudoku(n: 2, m: 3))
     }
 }

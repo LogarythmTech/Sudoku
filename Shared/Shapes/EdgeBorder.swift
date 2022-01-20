@@ -7,64 +7,6 @@
 
 import SwiftUI
 
-extension View {
-    func border(width: CGFloat, edges: [Edge], color: Color) -> some View {
-        overlay(EdgeBorder(width: width, edges: edges).foregroundColor(color))
-    }
-    
-    func sudokuBorder(n: Int, m: Int, row: Int, col: Int, width: CGFloat, color: Color) -> some View {
-        var boardEdges: [Edge] = [Edge]()
-        var groupEdges: [Edge] = [Edge]()
-        var cellEdges: [Edge] = [Edge]()
-        
-        //Top
-        if(row == 0) {
-            boardEdges.append(.top)
-        } else if(row % m == 0) {
-            groupEdges.append(.top)
-        } else {
-            cellEdges.append(.top)
-        }
-        
-        //Bottom
-        if(row == (n*m)-1) {
-            boardEdges.append(.bottom)
-        } else if(row % m == m - 1) {
-            groupEdges.append(.bottom)
-        } else {
-            cellEdges.append(.bottom)
-        }
-        
-        //Leading
-        if(col == 0) {
-            boardEdges.append(.leading)
-        } else if(col % n == 0) {
-            groupEdges.append(.leading)
-        } else {
-            cellEdges.append(.leading)
-        }
-        
-        //Trailing
-        if(col == (n*m) - 1) {
-            boardEdges.append(.trailing)
-        } else if(col % n == n - 1) {
-            groupEdges.append(.trailing)
-        } else {
-            cellEdges.append(.trailing)
-        }
-        
-        //boardEdges, groupEdges, and cellEdges should have all four edges combine
-        return ZStack {
-            //Board Lines
-            border(width: width*4, edges: boardEdges, color: color)
-            //Group Line
-            border(width: width*2, edges: groupEdges, color: color)
-            //Cell Line
-            border(width: width, edges: cellEdges, color: color)
-        }
-    }
-}
-
 struct EdgeBorder: Shape {
     var width: CGFloat
     var edges: [Edge]

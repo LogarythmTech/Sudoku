@@ -21,13 +21,11 @@ extension Sudoku {
         var possibleValues: [Int]
         
         /// The text color of the cell.
-        var foregroundColor: Color = .blue
+        /// Defualt. The initial text color should be black and the played text color should be blue. 
+        var foregroundColor: CellColor = .initalForeground
         
-        /// The background color of the cell.
-        var backgroundColor: Color = .clear
-        
-        /// The tint of the cell
-        var hightlightColor: Color = .clear
+        /// The backgournd of the cell. Should have primary highlight if selected. Secondary hightlight if it is in the same row, col, or group as the selected cell. No Hightlight if anything else
+        var highlightColor: CellColor = .noHighlight
         
         /// - Parameter n: The number of columns in a group of the board.
         /// - Parameter m: The number of rows in a group of the board.
@@ -40,6 +38,9 @@ extension Sudoku {
             }
         }
         
+        /// Removes (if appliable) all values in ``Sudoku.Cell.possibleValues`` in which are equal to `value`.
+        /// If   ``Sudoku.Cell.autoValue`` is `true`  and there is only one possible vaule left in ``Sudoku.Cell.possibleValues``, then sets ``Sudoku.Cell.value`` to last possible value.
+        /// - Parameter value: The Value to remove from ``Sudoku.Cell.possibleValues``
         mutating func removePossibleValue(_ value: Int) {
             possibleValues.removeAll(where: {$0 == value})
             
@@ -49,11 +50,15 @@ extension Sudoku {
             }
         }
         
+        /// Sets the cells value to `value`.
+        /// - Parameter value: The value to set cell's value to.
         mutating func setVaule(_ value: Int) {
             self.value = value
-            self.possibleValues = [Int]()
         }
         
+        /// Clears the value as well as resets the possible values of the cell.
+        /// - Parameter n: The number of columns in a group of the board.
+        /// - Parameter m: The number of rows in a group of the board.
         mutating func clear(n: Int, m: Int) {
             self.value = nil
             self.possibleValues = [Int]()

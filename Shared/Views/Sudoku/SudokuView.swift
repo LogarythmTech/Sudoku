@@ -8,22 +8,19 @@
 import SwiftUI
 
 struct SudokuView: View {
-    @StateObject var sudoku: Sudoku = Sudoku(n: 2, m: 2, cells: [[1, 2, 3, 4],
-                                                                 [4, nil, 2, 1],
-                                                                 [3, 4, 1, 2],
-                                                                 [2, 1, 4, 3]]) ?? Sudoku()
+    @StateObject var sudoku: Sudoku = Sudoku(n: 3, m: 3)
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 0) {
-                ForEach(0..<sudoku.m*sudoku.n) { row in
-                    HStack(spacing: 0) {
-                        ForEach(0..<sudoku.m*sudoku.n) { col in
-                            SudokuCellView(row: row, col: col, frame: CGSize(width: min(geometry.size.width, geometry.size.height), height: min(geometry.size.width, geometry.size.height))).environmentObject(sudoku)
-                        }
-                    }
-                }
+        VStack {
+            SudokuBoardView()
+                .aspectRatio(1, contentMode: .fit)
+                .environmentObject(sudoku)
+            Button {
+                sudoku[0, 0].value = 3
+            } label: {
+                Text("Next Move")
             }
+
         }
     }
 }

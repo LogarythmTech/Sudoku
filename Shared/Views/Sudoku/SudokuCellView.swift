@@ -15,9 +15,10 @@ struct SudokuCellView: View {
     
     var body: some View {
         Group {
-            if let value = sudoku.cells[row][col].value {
+            if let value = sudoku[row, col].value {
                 Text(String(value))
                     .font(.system(size: 500, weight: .bold))
+                    .cellTextColor(sudoku[row, col].foregroundColor)
                     .minimumScaleFactor(0.01)
             } else if(sudoku.hideNotes) {
                 Spacer()
@@ -26,7 +27,8 @@ struct SudokuCellView: View {
             }
         }
         .frame(width: self.frame.width/CGFloat(sudoku.size), height: self.frame.height/CGFloat(sudoku.size))
-        .sudokuBorder(n: sudoku.n, m: sudoku.m, row: row, col: col, width: 1, color: .black)
+        .cellBackground(sudoku[row, col].highlightColor)
+        .sudokuBorder(n: sudoku.n, m: sudoku.m, row: row, col: col, width: 1, color: .primary)
     }
 }
 

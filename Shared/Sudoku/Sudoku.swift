@@ -19,7 +19,7 @@ public class Sudoku: ObservableObject {
         return n*m
     }
     
-    var cells: [[Cell]]
+    @Published private var cells: [[Cell]]
     
     var hideNotes: Bool = false
     
@@ -65,11 +65,23 @@ public class Sudoku: ObservableObject {
         self.printCells()
     }
     
-    //MARK: - Getters
-    func getCells() -> [[Cell]] {
-        return cells
+    //MARK: - Subscript
+    subscript(row: Int, col: Int) -> Cell {
+        get {
+            return cells[row][col]
+        }
+        set(newValue) {
+            if let setValue = newValue.value {
+                if(setValue > 0 && setValue < self.size) {
+                    self.cells[row][col] = newValue
+                }
+            } else {
+                self.cells[row][col] = newValue
+            }
+        }
     }
     
+    //MARK: - Getters
     func getGroupIndex(row: Int, col: Int) -> Int {
         return (row / n) * n + col / m
     }
@@ -116,7 +128,7 @@ public class Sudoku: ObservableObject {
     }
     
     //MARK: - Setters
-    func setCell(row: Int, col: Int, to value: Int) {
+    public func setCell(row: Int, col: Int, to value: Int) {
         if(value > 0 && value <= n*m) {
             for i in 0..<n*m {
                 cells[row][i].removePossibleValue(value)
