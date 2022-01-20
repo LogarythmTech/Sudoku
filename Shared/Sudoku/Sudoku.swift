@@ -21,7 +21,7 @@ public class Sudoku: ObservableObject {
     }
     
     @Published private var cells: [[Cell]]
-    @Published var hideNotes: Bool = false
+    @Published var hideNotes: Bool = true
     @Published var selectedCell: CellPosition?
     
     //MARK: - Initializers

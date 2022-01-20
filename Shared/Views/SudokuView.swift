@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct SudokuView: View {
-    @StateObject var sudoku: Sudoku = Sudoku(n: 2, m: 2)
+    @StateObject var sudoku: Sudoku = Sudoku(n: 3, m: 3)
     
     var body: some View {
         VStack {
             SudokuBoardView()
-                .aspectRatio(1, contentMode: .fit)
                 .environmentObject(sudoku)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: .fit)
             
             
             HStack {

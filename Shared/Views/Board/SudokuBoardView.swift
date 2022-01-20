@@ -19,12 +19,20 @@ struct SudokuBoardView: View {
                             Button {
                                 sudoku.setSelectedCell(to: row, col: col)
                             } label: {
-                                SudokuCellView(row: row, col: col, frame: CGSize(width: min(geometry.size.width, geometry.size.height), height: min(geometry.size.width, geometry.size.height)))                            }
+                                SudokuCellView(row: row, col: col, frame: CGSize(width: min(geometry.size.width, geometry.size.height), height: min(geometry.size.width, geometry.size.height)))
+                                
+                            }.buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
             }
         }
+    }
+}
+
+struct SomeButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }
 
