@@ -30,12 +30,6 @@ struct SudokuBoardView: View {
     }
 }
 
-struct SomeButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-    }
-}
-
 struct SudokuBoardView_Previews: PreviewProvider {
     static var previews: some View {
         SudokuBoardView().environmentObject(Sudoku())

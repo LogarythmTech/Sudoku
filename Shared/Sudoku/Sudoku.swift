@@ -24,6 +24,8 @@ public class Sudoku: ObservableObject {
     @Published var hideNotes: Bool = true
     @Published var selectedCell: CellPosition?
     
+    var gameMode: GameMode = .CreateGame
+    
     //MARK: - Initializers
     convenience init() {
         self.init(n: 3, m: 3)
@@ -161,6 +163,12 @@ public class Sudoku: ObservableObject {
         if let value = value {
             if(value > 0 && value <= size) {
                 self.cells[pos.row][pos.column].value = value
+                if(gameMode == .PlayGame) {
+                    self.cells[pos.row][pos.column].foregroundColor = .playedForeground
+                } else {
+                    self.cells[pos.row][pos.column].foregroundColor = .initalForeground
+                }
+                
                 
                 for i in 0..<size {
                     if(i != pos.row) {

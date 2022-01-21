@@ -48,6 +48,7 @@ struct SudokuView: View {
                 sudoku[7, 8].value = 9
                 sudoku[8, 2].value = 9
                 sudoku[8, 6].value = 4
+                sudoku.gameMode = .PlayGame
             } label: {
                 Text("Create")
             }
