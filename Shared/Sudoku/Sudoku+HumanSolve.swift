@@ -105,6 +105,40 @@ extension Sudoku {
     //MARK: - Techniques to Remove Possible Values
     //MARK: Pointing Pairs
     /// If in a group, there exists a certain number that can only fit into cells that are aligned on the same row or column, then said number cannot be placed in the remaining cells of the row/column (the cells that do not belong to the group).
+    func filterPointingPairs() -> CellPosition? {
+        for group in 0..<size {
+            //Iterate between playable numbers (1-9 in a stanard 9x9 board)
+            for value in 1...size {
+                // The rows that `i` is possible to be played at.
+                var rows: [Int] = [Int]()
+                // The cols that `i` is possible to be played at.
+                var cols: [Int] = [Int]()
+                
+                //Iterate though group
+                for index in 0..<size {
+                    let pos: CellPosition = CellPosition(group: group, groupIndex: index, n: n, m: m)
+                    if(self[pos].possibleValues.contains(value)) {
+                        rows.append(pos.row)
+                        cols.append(pos.column)
+                    }
+                }
+                
+                if(rows.count == 1) {
+                    return nil
+                }
+                if(cols.count == 1) {
+                    return nil
+                }
+            }
+        }
+        
+        // 1s are in rows [1, 2, 3]
+        // 2s are in rows [1] then for rest of row 1 then remove the 2s.
+        
+        
+        
+        return nil
+    }
     
     //MARK: Box Line Reduction
     /// If in a row or column, there exists a certain number that can only fit into cells that are in the same group, then said number cannot be placed in the remaining cells of the group (the cells that do not belong to the row/column).

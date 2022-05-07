@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SudokuView: View {
-    @StateObject var sudoku: Sudoku = Sudoku(n: 3, m: 3)
+    @StateObject var sudoku: Sudoku = Sudoku(n: 4, m: 4)
     
     var body: some View {
         VStack {

@@ -33,8 +33,8 @@
 		D1291EF7279A184E003371A5 /* Sudoku+ComputerSolve.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139788D2796476600CBCCC7 /* Sudoku+ComputerSolve.swift */; };
 		D1291EF8279A184E003371A5 /* Sudoku.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978872796468A00CBCCC7 /* Sudoku.swift */; };
 		D1291EFA279A1E37003371A5 /* Sudoku+GameMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EF9279A1E37003371A5 /* Sudoku+GameMode.swift */; };
-		D1291EFC279A1F4C003371A5 /* Color+Extra.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1291EFB279A1F4C003371A5 /* Color+Extra.swift */; };
 		D1291F38279A7EAD003371A5 /* SwiftUIColors in Frameworks */ = {isa = PBXBuildFile; productRef = D1291F37279A7EAD003371A5 /* SwiftUIColors */; };
+		D1291F3E27A259CD003371A5 /* BigInteger in Frameworks */ = {isa = PBXBuildFile; productRef = D1291F3D27A259CD003371A5 /* BigInteger */; };
 		D13978632796457800CBCCC7 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978622796457800CBCCC7 /* Tests_iOS.swift */; };
 		D13978652796457800CBCCC7 /* Tests_iOSLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13978642796457800CBCCC7 /* Tests_iOSLaunchTests.swift */; };
 		D139786F2796457800CBCCC7 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139786E2796457800CBCCC7 /* Tests_macOS.swift */; };
@@ -82,7 +82,6 @@
 		D1291EE027992753003371A5 /* Sudoku+CellPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+CellPosition.swift"; sourceTree = "<group>"; };
 		D1291EE2279A0D0C003371A5 /* ValueButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueButtonView.swift; sourceTree = "<group>"; };
 		D1291EF9279A1E37003371A5 /* Sudoku+GameMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sudoku+GameMode.swift"; sourceTree = "<group>"; };
-		D1291EFB279A1F4C003371A5 /* Color+Extra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extra.swift"; sourceTree = "<group>"; };
 		D139784A2796457800CBCCC7 /* SudokuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SudokuApp.swift; sourceTree = "<group>"; };
 		D139784B2796457800CBCCC7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D139784C2796457800CBCCC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,6 +111,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1291F3E27A259CD003371A5 /* BigInteger in Frameworks */,
 				D1291F38279A7EAD003371A5 /* SwiftUIColors in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,7 +147,6 @@
 				D1291ED927991771003371A5 /* View+SudokuBorder.swift */,
 				D1291EDC279917E0003371A5 /* View+CellBackground.swift */,
 				D1291EDE27991A97003371A5 /* Text+CellTextColor.swift */,
-				D1291EFB279A1F4C003371A5 /* Color+Extra.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -275,6 +274,7 @@
 			name = "Sudoku (iOS)";
 			packageProductDependencies = (
 				D1291F37279A7EAD003371A5 /* SwiftUIColors */,
+				D1291F3D27A259CD003371A5 /* BigInteger */,
 			);
 			productName = "Sudoku (iOS)";
 			productReference = D13978512796457800CBCCC7 /* Sudoku.app */;
@@ -370,6 +370,7 @@
 			mainGroup = D13978442796457700CBCCC7;
 			packageReferences = (
 				D1291F36279A7EAD003371A5 /* XCRemoteSwiftPackageReference "SwiftUIColors" */,
+				D1291F3C27A259CD003371A5 /* XCRemoteSwiftPackageReference "NumberTheory" */,
 			);
 			productRefGroup = D13978522796457800CBCCC7 /* Products */;
 			projectDirPath = "";
@@ -427,7 +428,6 @@
 				D13978F127964B9100CBCCC7 /* SudokuView.swift in Sources */,
 				D1291EE3279A0D0D003371A5 /* ValueButtonView.swift in Sources */,
 				D13978FA2799148800CBCCC7 /* SudokuBoardView.swift in Sources */,
-				D1291EFC279A1F4C003371A5 /* Color+Extra.swift in Sources */,
 				D13978722796457800CBCCC7 /* SudokuApp.swift in Sources */,
 				D139788A279646E900CBCCC7 /* Sudoku+Cell.swift in Sources */,
 				D13978F527964D4300CBCCC7 /* EdgeBorder.swift in Sources */,
@@ -871,6 +871,14 @@
 				kind = branch;
 			};
 		};
+		D1291F3C27A259CD003371A5 /* XCRemoteSwiftPackageReference "NumberTheory" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Logarithm-1/NumberTheory";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -878,6 +886,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D1291F36279A7EAD003371A5 /* XCRemoteSwiftPackageReference "SwiftUIColors" */;
 			productName = SwiftUIColors;
+		};
+		D1291F3D27A259CD003371A5 /* BigInteger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1291F3C27A259CD003371A5 /* XCRemoteSwiftPackageReference "NumberTheory" */;
+			productName = BigInteger;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

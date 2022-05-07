@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIColors
 
 extension View {
     func cellBackground(_ cellColor: Sudoku.CellColor) -> some View {
@@ -13,9 +14,9 @@ extension View {
         case .noHighlight:
             return background(Color.clear)
         case .primaryHighlight:
-            return background(Color.pink)
+            return background(Color.logSkyBlue)
         case .secondaryHighlight:
-            return background(Color.blue)
+            return background(Color.logLightGray)
         default:
             return background(Color.clear)
         }

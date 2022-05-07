@@ -21,10 +21,13 @@ public class Sudoku: ObservableObject {
     }
     
     @Published private var cells: [[Cell]]
-    @Published var hideNotes: Bool = true
+    @Published var hideNotes: Bool = false
     @Published var selectedCell: CellPosition?
     
     var gameMode: GameMode = .CreateGame
+    
+    /// A bitmask of size  `n*n*m*m*` indicating which cell could possible contain a certain value.
+    var possibleCells: [Int : [Bool]]
     
     //MARK: - Initializers
     convenience init() {
@@ -39,31 +42,36 @@ public class Sudoku: ObservableObject {
         self.n = n
         self.m = m
         self.cells = [[Cell]]()
+        self.possibleCells = [:]
         
+        var bitmask: [Bool] = [Bool]()
+        //Create Board + bitmask
         for row in 0..<(n*m) {
             self.cells.append([Cell]())
             
             for col in 0..<(n*m) {
                 self.cells[row].append(Cell(n: n, m: m, row: row, column: col))
+                bitmask.append(true)
             }
         }
+        
+        //Create Bitmask
+        for value in 1...(n*m) {
+            possibleCells[value] = bitmask
+        }
                                         
-        self.printCells()
+        //self.printCells()
+        self.printPossibleCells(for: 1)
+        self.editPossibleCells(for: 1, pos: CellPosition(row: 0, column: 0, n: n, m: m))
     }
     
     init?(n: Int, m: Int, cells: [[Int?]]) {
         self.n = n
         self.m = m
         self.cells = [[Cell]]()
+        self.possibleCells = [:]
         
-        for row in 0..<(n*m) {
-            self.cells.append([Cell]())
-            
-            for col in 0..<(n*m) {
-                self.cells[row].append(Cell(n: n, m: m, row: row, column: col))
-            }
-        }
-        
+        //Validate Inputed Cell is correct size
         if(cells.count != n*m) {
             return nil
         } else {
@@ -74,6 +82,18 @@ public class Sudoku: ObservableObject {
             }
         }
         
+        //Create Board + Bitmask
+        var bitmask: [Bool] = [Bool]()
+        for row in 0..<(n*m) {
+            self.cells.append([Cell]())
+            
+            for col in 0..<(n*m) {
+                self.cells[row].append(Cell(n: n, m: m, row: row, column: col))
+                bitmask.append(true)
+            }
+        }
+        
+        //Input Value from parater cells into board
         for row in 0..<(n*m) {
             for col in 0..<(n*m) {
                 if let value = cells[row][col] {
@@ -82,7 +102,13 @@ public class Sudoku: ObservableObject {
             }
         }
         
-        self.printCells()
+        //Create Bitmask
+        for value in 1...(n*m) {
+            possibleCells[value] = bitmask
+        }
+        
+        //self.printCells()
+        self.printPossibleCells(for: 1)
     }
     
     //MARK: - Subscript
@@ -192,6 +218,15 @@ public class Sudoku: ObservableObject {
         }
     }
     
+    func editPossibleCells(for value: Int, pos: CellPosition) {
+        if var bitmask = possibleCells[value] {
+            bitmask[0] = false
+            
+            possibleCells[value] = bitmask
+        }
+        self.printPossibleCells(for: value)
+    }
+    
     func setSelectedCell(to row: Int, col: Int) {
         var pos: CellPosition? = nil
         
@@ -288,5 +323,116 @@ public class Sudoku: ObservableObject {
         }
         
         print(line)
+    }
+    
+    private func iterateThroughCells(completion: (_ row: Int, _ col: Int) -> ()) -> () {
+        for row in 0..<self.size {
+            for col in 0..<self.size {
+                completion(row, col)
+            }
+        }
+    }
+    
+    private func getTopBoxLine() -> String {
+        var line = "┌"
+        
+        for j in 0..<m {
+            if(j != 0) {
+                line += "┬"
+            }
+            
+            for i in 0..<n {
+                if(i == 0) {
+                    line += "─"
+                } else {
+                    line += "──"
+                }
+            }
+        }
+        
+        line += "┐"
+        return line
+    }
+    
+    private func getBottomBoxLine() -> String {
+        var line = "└"
+        
+        for j in 0..<m {
+            if(j != 0) {
+                line += "┴"
+            }
+            
+            for i in 0..<n {
+                if(i == 0) {
+                    line += "─"
+                } else {
+                    line += "──"
+                }
+            }
+        }
+        
+        line += "┘"
+        return line
+    }
+    
+    private func getMiddleBoxLine() -> String {
+        var line = "├"
+        for j in 0..<m {
+            if(j != 0) {
+                line += "┼"
+            }
+            
+            for i in 0..<n {
+                if(i == 0) {
+                    line += "─"
+                } else {
+                    line += "──"
+                }
+            }
+        }
+        line += "┤"
+        return line
+    }
+    
+    func printPossibleCells(for value: Int) {
+        if let bitmask = possibleCells[value] {
+            let topLine = getTopBoxLine()
+            let bottomLine = getBottomBoxLine()
+            let middleLine = getMiddleBoxLine()
+            
+            for row in 0..<size {
+                var r = ""
+                
+                for col in 0..<size {
+                    if(col % n == 0) {
+                        r += "│"
+                        
+                        if(bitmask[row*size + col]) {
+                            r += "1"
+                        } else {
+                            r += "0"
+                        }
+                    } else {
+                        if(bitmask[row*size + col]) {
+                            r += " 1"
+                        } else {
+                            r += " 0"
+                        }
+                    }
+                }
+                
+                r += "│"
+                
+                if(row % m == 0) {
+                    if(row == 0) {
+                        print(topLine)
+                    } else {
+                        print(middleLine)
+                    }
+                }
+                print(r)
+            }
+            print(bottomLine)
+        }
     }
 }
